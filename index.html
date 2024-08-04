@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedApp</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Deklarisanje funkcija
+        var getMood;
+        var setMood;
+    </script>
+    <script type="module">
+        import {
+            createWalletClient,
+            custom,
+            getContract,
+        } from "https://esm.sh/viem";
+        import { sepolia } from "https://esm.sh/viem/chains";
+
+        const walletClient = createWalletClient({
+            chain: sepolia,
+            transport: custom(window.ethereum),
+        });
+
+        // Funkcija za dobijanje MetaMask naloga
+        async function getAccounts() {
+            try {
+                const accounts = await walletClient.requestAddresses();
+                return accounts;
+            } catch (error) {
+                console.error("Error fetching accounts:", error);
+                return [];
+            }
+        }
+
+        // Funkcija za ažuriranje prikaza na osnovu naloga
+        function updateView(address) {
+            document.getElementById("account").innerHTML = address;
+
+            // Adrese naloga
+            const doktor = "0x0cd08bCf4c3C6A261F8F993938d2dD897F71267E";
+            const pacijent = "0xFd034B8Bfd5dA2864ab2E04fba88009971d97C82";
+
+            // Prikazivanje sekcija na osnovu naloga
+            if (address.toLowerCase() === doktor.toLowerCase()) {
+                document.getElementById("doktor").style.display = "block";
+                document.getElementById("pacijent").style.display = "none";
+            } else if (address.toLowerCase() === pacijent.toLowerCase()) {
+                document.getElementById("pacijent").style.display = "block";
+                document.getElementById("doktor").style.display = "none";
+            } else {
+                console.error("Account not recognized.");
+                document.getElementById("pacijent").style.display = "none";
+                document.getElementById("doktor").style.display = "none";
+            }
+
+            if (address.toLowerCase() === doktor.toLowerCase()) {
+                document.getElementById("d").style.display = "block";
+                document.getElementById("p").style.display = "none";
+            } else if (address.toLowerCase() === pacijent.toLowerCase()) {
+                document.getElementById("p").style.display = "block";
+                document.getElementById("d").style.display = "none";
+            } else {
+                console.error("Account not recognized.");
+                document.getElementById("p").style.display = "none";
+                document.getElementById("d").style.display = "none";
+            }
+        }
+
+        // Pokretanje funkcije nakon što se dokument učita
+        document.addEventListener("DOMContentLoaded", async () => {
+            const accounts = await getAccounts();
+            if (accounts.length === 0) {
+                console.error("No accounts found.");
+                return;
+            }
+
+            const [address] = accounts;
+            console.log("Connected account:", address);
+
+            // Pokretanje funkcije za početno učitavanje
+            updateView(address);
+
+            // Osluškivanje promene MetaMask naloga
+            window.ethereum.on('accountsChanged', function (accounts) {
+                if (accounts.length === 0) {
+                    console.error("No accounts found.");
+                    return;
+                }
+
+                const [newAddress] = accounts;
+                console.log("Connected account:", newAddress);
+
+                // Ažuriraj prikaz na osnovu novog naloga
+                updateView(newAddress);
+            });
+
+            const MoodContractAddress = "0xc1919D32776dF14340283891477510Ed5aBA3A02";
+            const MoodContractABI = [
+                {
+                    "inputs": [],
+                    "name": "getMood",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "_mood",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "setMood",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ];
+
+            const MoodContractInstance = getContract({
+                address: MoodContractAddress,
+                abi: MoodContractABI,
+                client: walletClient,
+            });
+
+            getMood = async function() {
+                const mood = await MoodContractInstance.read.getMood();
+                document.getElementById("showMood").innerText = `Your Mood: ${mood}`;
+            }
+
+            setMood = async function() {
+                const mood = document.getElementById("mood").value;
+                await MoodContractInstance.write.setMood([mood], {
+                    account: address
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+          <img src="logo.png" alt="" width="130"/>
+          </div>
+        <nav>
+          <ul>
+          <li>Почетна</li>
+          <li id="doktor" >Пацијенти</li>
+          <li id="pacijent">Доктори</li>
+          <li>Контакт</li>
+          </ul>
+          <div class="accountField">
+            <h6> Корисник:  <div id="account"></div></h6> 
+          </div>
+          </nav>
+    </div>
+
+    <div class="mainPage">
+        <div id="d" style="display: none;">
+            <h1>Doktor View</h1>
+            <p>Here we can set or get the mood:</p>
+            <label for="mood">Input Mood:</label> <br />
+            <input type="text" id="mood" />
+            <button onclick="getMood()">Get Mood</button>
+            <button onclick="setMood()">Set Mood</button>
+            <p id="showMood"></p>
+        </div>
+
+        <div id="p" style="display: none;">
+            <h1>Pacijent View</h1>
+            <p>Here we can get the mood:</p>
+            <button onclick="getMood()">Get Mood</button>
+            <p id="showMood"></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+body {
+  text-align: center;
+  font-family: "Bahnschrift SemiBold";
+  background-color: rgb(199, 199, 199);
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  width: 100%;
+  margin: 10px 0 5px 0;
+}
+
+* {
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(208, 20, 20);
+  color:white;
+  clear: both;
+}
+
+nav {
+  display: flex; 
+  align-items: center;
+}
+
+.logo img {
+  width: 130px;
+}
+
+ul {
+  list-style-type: none; 
+  padding: 0;
+  margin: 0;
+  display: flex; 
+}
+
+ul li {
+  display: inline-block;
+  padding: 25px 35px;
+  font-size: 20px;
+}
+
+ul li:hover {
+  color: rgb(187, 187, 187);
+}
+
+.mainPage {
+  width: 20%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.accountField {
+  background-color: rgb(185, 185, 185);
+  padding: 6px 20px; /* Dodaj padding ako je potrebno */
+  clear: both;
+  color:black;
+}
