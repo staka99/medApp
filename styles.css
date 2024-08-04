@@ -7,7 +7,7 @@ body {
 }
 
 button {
-  width: 100%;
+  width: 30%;
   margin: 10px 0 5px 0;
 }
 
@@ -51,15 +51,34 @@ ul li:hover {
 }
 
 .mainPage {
-  width: 20%;
+  width: 50%;
+  height: 1000px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  background-color: white;
+  color: black;
 }
 
 .accountField {
-  background-color: rgb(185, 185, 185);
+  background-color: rgb(130, 10, 10);
   padding: 6px 20px; /* Dodaj padding ako je potrebno */
-  clear: both;
-  color:black;
+  color: white;
+  display: flex;
+  align-items: center; /* Poravnava elemente po vertikalnoj osi */
+  gap: 20px; /* Razmak između elemenata */
+}
+
+.accountField .accountPhoto {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.accountField h6 {
+  margin: 0; /* Uklanja margine oko h6 */
+}
+
+.accountField .userName {
+  font-size: 100px;
 }

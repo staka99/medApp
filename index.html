@@ -37,35 +37,70 @@
 
         // Funkcija za ažuriranje prikaza na osnovu naloga
         function updateView(address) {
-            document.getElementById("account").innerHTML = address;
+            console.log("Current address:", address);
+
 
             // Adrese naloga
-            const doktor = "0x0cd08bCf4c3C6A261F8F993938d2dD897F71267E";
-            const pacijent = "0xFd034B8Bfd5dA2864ab2E04fba88009971d97C82";
+            const doktori = [
+                "0x30ec46af58b4613e135d3b38348ca543d8032acc",
+                "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e"
+            ];
+            const pacijenti = [
+                "0xad7ebe16749d2be378e519adf14166d9c41c908b",
+                "0xfd034b8bfd5da2864ab2e04fba88009971d97c82"
+            ];
+
+            const userNames = {
+                "0x30ec46af58b4613e135d3b38348ca543d8032acc": "др Андреа Милошевић",
+                "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e": "др Марко Марковић",
+                "0xad7ebe16749d2be378e519adf14166d9c41c908b": "Пацијент Петар Ракић",
+                "0xfd034b8bfd5da2864ab2e04fba88009971d97c82": "Пацијент Соња Марић"
+            };
+
+            document.getElementById("account").innerHTML = address;
+
+            const userName = userNames[address.toLowerCase()] || "Unknown User";
+            document.getElementById("userName").innerHTML = userName;
+
+
+            console.log("Doctors list:", doktori);
+            console.log("Patients list:", pacijenti);
 
             // Prikazivanje sekcija na osnovu naloga
-            if (address.toLowerCase() === doktor.toLowerCase()) {
-                document.getElementById("doktor").style.display = "block";
-                document.getElementById("pacijent").style.display = "none";
-            } else if (address.toLowerCase() === pacijent.toLowerCase()) {
-                document.getElementById("pacijent").style.display = "block";
-                document.getElementById("doktor").style.display = "none";
+            if (doktori.includes(address.toLowerCase())) {
+                console.log("Address is recognized as Doctor.");
+                // Ako je nalog doktor
+                document.getElementById("liDoktor").style.display = "block";
+                document.getElementById("liPacijent").style.display = "none";
+                document.getElementById("imgDoktor").style.display = "block";
+                document.getElementById("imgPacijent").style.display = "none";
+                document.getElementById("divPacijent").style.display = "none";
+                document.getElementById("divDoktor").style.display = "block";
+                document.getElementById("divPacijent").style.display = "none";
+                document.getElementById("showMoodDoktor").style.display = "block";
+                document.getElementById("showMoodPacijent").style.display = "none";
+            } else if (pacijenti.includes(address.toLowerCase())) {
+                console.log("Address is recognized as Patient.");
+                // Ako je nalog pacijent
+                document.getElementById("liDoktor").style.display = "none";
+                document.getElementById("liPacijent").style.display = "block";
+                document.getElementById("imgDoktor").style.display = "none";
+                document.getElementById("imgPacijent").style.display = "block";
+                document.getElementById("divDoktor").style.display = "none";
+                document.getElementById("divPacijent").style.display = "block";
+                document.getElementById("showMoodDoktor").style.display = "none";
+                document.getElementById("showMoodPacijent").style.display = "block";
             } else {
-                console.error("Account not recognized.");
-                document.getElementById("pacijent").style.display = "none";
-                document.getElementById("doktor").style.display = "none";
-            }
-
-            if (address.toLowerCase() === doktor.toLowerCase()) {
-                document.getElementById("d").style.display = "block";
-                document.getElementById("p").style.display = "none";
-            } else if (address.toLowerCase() === pacijent.toLowerCase()) {
-                document.getElementById("p").style.display = "block";
-                document.getElementById("d").style.display = "none";
-            } else {
-                console.error("Account not recognized.");
-                document.getElementById("p").style.display = "none";
-                document.getElementById("d").style.display = "none";
+                console.log("Address is not recognized.");
+                // Ako nalog nije prepoznat
+                document.getElementById("liDoktor").style.display = "none";
+                document.getElementById("liPacijent").style.display = "none";
+                document.getElementById("imgDoktor").style.display = "none";
+                document.getElementById("imgPacijent").style.display = "none";
+                document.getElementById("divDoktor").style.display = "none";
+                document.getElementById("divPacijent").style.display = "none";
+                document.getElementById("showMoodDoktor").style.display = "none";
+                document.getElementById("showMoodPacijent").style.display = "none";
             }
         }
 
@@ -97,7 +132,7 @@
                 updateView(newAddress);
             });
 
-            const MoodContractAddress = "0xc1919D32776dF14340283891477510Ed5aBA3A02";
+            const MoodContractAddress = "0xc1919d32776df14340283891477510ed5aba3a02";
             const MoodContractABI = [
                 {
                     "inputs": [],
@@ -133,7 +168,7 @@
                 client: walletClient,
             });
 
-            getMood = async function() {
+            АgetMood = async function() {
                 const mood = await MoodContractInstance.read.getMood();
                 document.getElementById("showMood").innerText = `Your Mood: ${mood}`;
             }
@@ -150,37 +185,49 @@
 <body>
     <div class="navbar">
         <div class="logo">
-          <img src="logo.png" alt="" width="130"/>
-          </div>
+          <img src="images/logo.png" alt="" width="130"/>
+        </div>
         <nav>
           <ul>
-          <li>Почетна</li>
-          <li id="doktor" >Пацијенти</li>
-          <li id="pacijent">Доктори</li>
-          <li>Контакт</li>
+            <li>Почетна</li>
+            <li id="liDoktor" style="display: none;">Пацијенти</li>
+            <li id="liPacijent" style="display: none;">Доктори</li>
+            <li>Контакт</li>
           </ul>
           <div class="accountField">
-            <h6> Корисник:  <div id="account"></div></h6> 
+            <div class="accountPhoto">
+                <div id="imgDoktor" style="display: none;">
+                    <img src="images/dr.png" alt="" height="60px"/>
+                </div>
+                <div id="imgPacijent" style="display: none;">
+                    <img src="images/pac.png" alt="" height="60px""/>
+                </div>
+            </div>
+            <h6> Корисник: 
+                <div id="userName"></div>
+                <div id="account"></div>
+            </h6> 
           </div>
-          </nav>
+          <div id="userName"></div>
+        </nav>
     </div>
 
     <div class="mainPage">
-        <div id="d" style="display: none;">
-            <h1>Doktor View</h1>
+        <div id="divDoktor" style="display: none;">
+            <h1>Листа пацијената</h1>
             <p>Here we can set or get the mood:</p>
             <label for="mood">Input Mood:</label> <br />
             <input type="text" id="mood" />
             <button onclick="getMood()">Get Mood</button>
             <button onclick="setMood()">Set Mood</button>
-            <p id="showMood"></p>
+            <p id="showMoodDoktor"></p>
         </div>
 
-        <div id="p" style="display: none;">
-            <h1>Pacijent View</h1>
+        <div id="divPacijent" style="display: none;">
+            <h1>Листа доктора</h1>
             <p>Here we can get the mood:</p>
             <button onclick="getMood()">Get Mood</button>
-            <p id="showMood"></p>
+            <p id="showMoodPacijent"></p>
         </div>
     </div>
 </body>
