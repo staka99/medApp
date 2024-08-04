@@ -6,181 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MedApp</title>
     <link rel="stylesheet" href="styles.css">
-    <script>
-        // Deklarisanje funkcija
-        var getMood;
-        var setMood;
-    </script>
-    <script type="module">
-        import {
-            createWalletClient,
-            custom,
-            getContract,
-        } from "https://esm.sh/viem";
-        import { sepolia } from "https://esm.sh/viem/chains";
-
-        const walletClient = createWalletClient({
-            chain: sepolia,
-            transport: custom(window.ethereum),
-        });
-
-        // Funkcija za dobijanje MetaMask naloga
-        async function getAccounts() {
-            try {
-                const accounts = await walletClient.requestAddresses();
-                return accounts;
-            } catch (error) {
-                console.error("Error fetching accounts:", error);
-                return [];
-            }
-        }
-
-        // Funkcija za ažuriranje prikaza na osnovu naloga
-        function updateView(address) {
-            console.log("Current address:", address);
-
-
-            // Adrese naloga
-            const doktori = [
-                "0x30ec46af58b4613e135d3b38348ca543d8032acc",
-                "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e"
-            ];
-            const pacijenti = [
-                "0xad7ebe16749d2be378e519adf14166d9c41c908b",
-                "0xfd034b8bfd5da2864ab2e04fba88009971d97c82"
-            ];
-
-            const userNames = {
-                "0x30ec46af58b4613e135d3b38348ca543d8032acc": "др Андреа Милошевић",
-                "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e": "др Марко Марковић",
-                "0xad7ebe16749d2be378e519adf14166d9c41c908b": "Пацијент Петар Ракић",
-                "0xfd034b8bfd5da2864ab2e04fba88009971d97c82": "Пацијент Соња Марић"
-            };
-
-            document.getElementById("account").innerHTML = address;
-
-            const userName = userNames[address.toLowerCase()] || "Unknown User";
-            document.getElementById("userName").innerHTML = userName;
-
-
-            console.log("Doctors list:", doktori);
-            console.log("Patients list:", pacijenti);
-
-            // Prikazivanje sekcija na osnovu naloga
-            if (doktori.includes(address.toLowerCase())) {
-                console.log("Address is recognized as Doctor.");
-                // Ako je nalog doktor
-                document.getElementById("liDoktor").style.display = "block";
-                document.getElementById("liPacijent").style.display = "none";
-                document.getElementById("imgDoktor").style.display = "block";
-                document.getElementById("imgPacijent").style.display = "none";
-                document.getElementById("divPacijent").style.display = "none";
-                document.getElementById("divDoktor").style.display = "block";
-                document.getElementById("divPacijent").style.display = "none";
-                document.getElementById("showMoodDoktor").style.display = "block";
-                document.getElementById("showMoodPacijent").style.display = "none";
-            } else if (pacijenti.includes(address.toLowerCase())) {
-                console.log("Address is recognized as Patient.");
-                // Ako je nalog pacijent
-                document.getElementById("liDoktor").style.display = "none";
-                document.getElementById("liPacijent").style.display = "block";
-                document.getElementById("imgDoktor").style.display = "none";
-                document.getElementById("imgPacijent").style.display = "block";
-                document.getElementById("divDoktor").style.display = "none";
-                document.getElementById("divPacijent").style.display = "block";
-                document.getElementById("showMoodDoktor").style.display = "none";
-                document.getElementById("showMoodPacijent").style.display = "block";
-            } else {
-                console.log("Address is not recognized.");
-                // Ako nalog nije prepoznat
-                document.getElementById("liDoktor").style.display = "none";
-                document.getElementById("liPacijent").style.display = "none";
-                document.getElementById("imgDoktor").style.display = "none";
-                document.getElementById("imgPacijent").style.display = "none";
-                document.getElementById("divDoktor").style.display = "none";
-                document.getElementById("divPacijent").style.display = "none";
-                document.getElementById("showMoodDoktor").style.display = "none";
-                document.getElementById("showMoodPacijent").style.display = "none";
-            }
-        }
-
-        // Pokretanje funkcije nakon što se dokument učita
-        document.addEventListener("DOMContentLoaded", async () => {
-            const accounts = await getAccounts();
-            if (accounts.length === 0) {
-                console.error("No accounts found.");
-                return;
-            }
-
-            const [address] = accounts;
-            console.log("Connected account:", address);
-
-            // Pokretanje funkcije za početno učitavanje
-            updateView(address);
-
-            // Osluškivanje promene MetaMask naloga
-            window.ethereum.on('accountsChanged', function (accounts) {
-                if (accounts.length === 0) {
-                    console.error("No accounts found.");
-                    return;
-                }
-
-                const [newAddress] = accounts;
-                console.log("Connected account:", newAddress);
-
-                // Ažuriraj prikaz na osnovu novog naloga
-                updateView(newAddress);
-            });
-
-            const MoodContractAddress = "0xc1919d32776df14340283891477510ed5aba3a02";
-            const MoodContractABI = [
-                {
-                    "inputs": [],
-                    "name": "getMood",
-                    "outputs": [
-                        {
-                            "internalType": "string",
-                            "name": "",
-                            "type": "string"
-                        }
-                    ],
-                    "stateMutability": "view",
-                    "type": "function"
-                },
-                {
-                    "inputs": [
-                        {
-                            "internalType": "string",
-                            "name": "_mood",
-                            "type": "string"
-                        }
-                    ],
-                    "name": "setMood",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "function"
-                }
-            ];
-
-            const MoodContractInstance = getContract({
-                address: MoodContractAddress,
-                abi: MoodContractABI,
-                client: walletClient,
-            });
-
-            АgetMood = async function() {
-                const mood = await MoodContractInstance.read.getMood();
-                document.getElementById("showMood").innerText = `Your Mood: ${mood}`;
-            }
-
-            setMood = async function() {
-                const mood = document.getElementById("mood").value;
-                await MoodContractInstance.write.setMood([mood], {
-                    account: address
-                });
-            }
-        });
-    </script>
+    <script src="script.js" type="module"></script>
 </head>
 <body>
     <div class="navbar">
@@ -190,16 +16,16 @@
         <nav>
           <ul>
             <li>Почетна</li>
-            <li id="liDoktor" style="display: none;">Пацијенти</li>
-            <li id="liPacijent" style="display: none;">Доктори</li>
+            <li class="nav-link doctor-only" style="display: none;">Пацијенти</li>
+            <li class="nav-link patient-only" style="display: none;">Доктори</li>
             <li>Контакт</li>
           </ul>
           <div class="accountField">
             <div class="accountPhoto">
-                <div id="imgDoktor" style="display: none;">
+                <div id="imgDoktor" class="doctor-only" style="display: none;">
                     <img src="images/dr.png" alt="" height="60px"/>
                 </div>
-                <div id="imgPacijent" style="display: none;">
+                <div id="imgPacijent" class="patient-only" style="display: none;">
                     <img src="images/pac.png" alt="" height="60px""/>
                 </div>
             </div>
@@ -208,12 +34,11 @@
                 <div id="account"></div>
             </h6> 
           </div>
-          <div id="userName"></div>
         </nav>
     </div>
 
     <div class="mainPage">
-        <div id="divDoktor" style="display: none;">
+        <div id="divDoktor" class="profile-section doctor-only" style="display: none;">
             <h1>Листа пацијената</h1>
             <p>Here we can set or get the mood:</p>
             <label for="mood">Input Mood:</label> <br />
@@ -223,7 +48,7 @@
             <p id="showMoodDoktor"></p>
         </div>
 
-        <div id="divPacijent" style="display: none;">
+        <div id="divPacijent" class="profile-section patient-only" style="display: none;">
             <h1>Листа доктора</h1>
             <p>Here we can get the mood:</p>
             <button onclick="getMood()">Get Mood</button>
