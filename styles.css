@@ -6,11 +6,6 @@ body {
   padding: 0;
 }
 
-button {
-  width: 30%;
-  margin: 10px 0 5px 0;
-}
-
 * {
   transition: all 0.3s ease-in-out;
 }
@@ -81,4 +76,60 @@ ul li:hover {
 
 .accountField .userName {
   font-size: 100px;
+}
+
+/* Styles for doctor table */
+#doctorTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#doctorTable th, #doctorTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#doctorTable th {
+    background-color: rgb(208, 20, 20); /* Gray color for header */
+    color: white; /* Text color for header */
+    font-weight: bold;
+    text-align: center; /* Center text in header */
+    height: 50px;
+}
+
+#doctorTable tr:nth-child(even) {
+    background-color: rgb(222, 222, 222); /* Gray color for even rows */
+    color: black; /* Text color for even rows */
+}
+
+#doctorTable tr:nth-child(odd) {
+    background-color: #ffffff; /* White color for odd rows */
+}
+
+#doctorTable td {
+    text-align: left; /* Default text alignment for cells */
+}
+
+#doctorTable td:last-child {
+    text-align: center; /* Center text in the last column */
+}
+
+#doctorTable button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#doctorTable button:hover {
+    background-color: #358a39;
 }

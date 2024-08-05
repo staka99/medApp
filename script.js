@@ -21,31 +21,59 @@ async function getAccounts() {
     }
 }
 
-// Funkcija za ažuriranje prikaza na osnovu naloga
+// Funkcija za prikazivanje tabele sa doktorima
+function displayDoctors(doctors) {
+    const tableBody = document.querySelector('#doctorTable tbody');
+    tableBody.innerHTML = ''; // Clear previous content
+
+    doctors.forEach(doctor => {
+        const row = document.createElement('tr');
+        
+        const addressCell = document.createElement('td');
+        addressCell.textContent = doctor.address;
+        row.appendChild(addressCell);
+        
+        const nameCell = document.createElement('td');
+        nameCell.textContent = doctor.userName;
+        row.appendChild(nameCell);
+        
+        const actionCell = document.createElement('td');
+        const button = document.createElement('button');
+        button.textContent = 'Дозволи приступ';
+        button.onclick = () => {
+            // Implement access logic here
+            alert(`Access granted to ${doctor.userName}`);
+        };
+        actionCell.appendChild(button);
+        row.appendChild(actionCell);
+
+        tableBody.appendChild(row);
+    });
+}
+
+// Modifikovana funkcija updateView da uključuje prikaz doktora
 function updateView(address) {
     console.log("Current address:", address);
 
-    // Adrese naloga
+    // Adrese i imena doktora
     const doktori = [
-        "0x30ec46af58b4613e135d3b38348ca543d8032acc",
-        "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e"
+        { address: "0x30ec46af58b4613e135d3b38348ca543d8032acc", userName: "др Андреа Милошевић" },
+        { address: "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e", userName: "др Марко Марковић" },
+        { address: "0x33e8aa8b54897352D3bA98D317CfAB82F6468a73", userName: "др Јелена Ивић" }
     ];
     const pacijenti = [
-        "0xad7ebe16749d2be378e519adf14166d9c41c908b",
-        "0xfd034b8bfd5da2864ab2e04fba88009971d97c82"
+        { address: "0xad7ebe16749d2be378e519adf14166d9c41c908b", userName: "Пацијент Петар Ракић" },
+        { address: "0xfd034b8bfd5da2864ab2e04fba88009971d97c82", userName: "Пацијент Соња Марић" },
+        { address: "0xbF0aCd829d5F6bca4d5565da16A031cf17A96568", userName: "Пацијент Иван Стаменковић" }
     ];
-
-    const userNames = {
-        "0x30ec46af58b4613e135d3b38348ca543d8032acc": "др Андреа Милошевић",
-        "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e": "др Марко Марковић",
-        "0xad7ebe16749d2be378e519adf14166d9c41c908b": "Пацијент Петар Ракић",
-        "0xfd034b8bfd5da2864ab2e04fba88009971d97c82": "Пацијент Соња Марић"
-    };
 
     document.getElementById("account").innerHTML = address;
 
-    const userName = userNames[address.toLowerCase()] || "Unknown User";
-    document.getElementById("userName").innerHTML = userName;
+    // Pronalaženje korisničkog imena na osnovu adrese
+    const userName = doktori.find(doc => doc.address.toLowerCase() === address.toLowerCase())
+                      || pacijenti.find(pac => pac.address.toLowerCase() === address.toLowerCase())
+                      || { userName: "Unknown User" };
+    document.getElementById("userName").innerHTML = userName.userName;
 
     console.log("Doctors list:", doktori);
     console.log("Patients list:", pacijenti);
@@ -61,18 +89,20 @@ function updateView(address) {
     });
 
     // Prikazivanje sekcija na osnovu naloga
-    if (doktori.includes(address.toLowerCase())) {
+    if (doktori.some(doc => doc.address.toLowerCase() === address.toLowerCase())) {
         console.log("Address is recognized as Doctor.");
         document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "block");
         document.querySelectorAll(".patient-only").forEach(el => el.style.display = "none");
-    } else if (pacijenti.includes(address.toLowerCase())) {
+    } else if (pacijenti.some(pac => pac.address.toLowerCase() === address.toLowerCase())) {
         console.log("Address is recognized as Patient.");
         document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "none");
         document.querySelectorAll(".patient-only").forEach(el => el.style.display = "block");
+        displayDoctors(doktori); // Display the list of doctors for patients
     } else {
         console.log("Address is not recognized.");
     }
 }
+
 
 // Pokretanje funkcije nakon što se dokument učita
 document.addEventListener("DOMContentLoaded", async () => {
