@@ -21,35 +21,256 @@ async function getAccounts() {
     }
 }
 
-// Funkcija za prikazivanje tabele sa doktorima
-function displayDoctors(doctors) {
-    const tableBody = document.querySelector('#doctorTable tbody');
-    tableBody.innerHTML = ''; // Clear previous content
 
-    doctors.forEach(doctor => {
-        const row = document.createElement('tr');
-        
-        const addressCell = document.createElement('td');
-        addressCell.textContent = doctor.address;
-        row.appendChild(addressCell);
-        
-        const nameCell = document.createElement('td');
-        nameCell.textContent = doctor.userName;
-        row.appendChild(nameCell);
-        
-        const actionCell = document.createElement('td');
-        const button = document.createElement('button');
-        button.textContent = 'Дозволи приступ';
-        button.onclick = () => {
-            // Implement access logic here
-            alert(`Access granted to ${doctor.userName}`);
-        };
-        actionCell.appendChild(button);
-        row.appendChild(actionCell);
+// Pokretanje funkcije nakon što se dokument učita
+document.addEventListener("DOMContentLoaded", async () => {
+    const accounts = await getAccounts();
+    if (accounts.length === 0) {
+        console.error("No accounts found.");
+        return;
+    }
 
-        tableBody.appendChild(row);
+    const [address] = accounts;
+    console.log("Connected account:", address);
+
+    // Pokretanje funkcije za početno učitavanje
+    updateView(address);
+
+    // Osluškivanje promene MetaMask naloga
+    window.ethereum.on('accountsChanged', function (accounts) {
+        if (accounts.length === 0) {
+            console.error("No accounts found.");
+            return;
+        }
+
+        const [newAddress] = accounts;
+        console.log("Connected account:", newAddress);
+
+        // Ažuriraj prikaz na osnovu novog naloga
+        updateView(newAddress);
     });
-}
+
+    const MoodContractABI = [
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "grantAccess",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "revokeAccess",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "accessList",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "patient",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "doctor",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getAccessList",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "patient",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "doctor",
+                            "type": "address"
+                        }
+                    ],
+                    "internalType": "struct AccessControl.Access[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "isAccessGranted",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
+    
+    const MoodContractAddress = "0x057f4aeA6DF2F2BF7A01066a52369a854B8f529a";
+    const MoodContractInstance = getContract({
+        address: MoodContractAddress,
+        abi: MoodContractABI,
+        client: walletClient,
+    });
+
+    async function grantAccess(patientAddress, doctorAddress, account) {
+        try {
+            await MoodContractInstance.write.grantAccess([patientAddress, doctorAddress], { account: address });
+            console.log(`Access granted to doctor: ${doctorAddress} for patient: ${patientAddress}`);
+        } catch (error) {
+            console.error("Error granting access:", error);
+        }
+    }
+
+    async function revokeAccess(patientAddress, doctorAddress, account) {
+        try {
+            await MoodContractInstance.write.revokeAccess([patientAddress, doctorAddress], { account: address });
+            console.log(`Access revoked from doctor: ${doctorAddress} for patient: ${patientAddress}`);
+        } catch (error) {
+            console.error("Error revoking access:", error);
+        }
+    }
+
+    async function getAccessList() {
+        try {
+            const accessList = await MoodContractInstance.read.getAccessList();
+            console.log("Access List:", accessList);
+            return accessList;
+        } catch (error) {
+            console.error("Error fetching access list:", error);
+            return [];
+        }
+    }
+
+    async function isAccessGranted(patientAddress, doctorAddress) {
+        try {
+            console.log('Patient Address:', patientAddress);
+            console.log('Doctor Address:', doctorAddress);
+            const result = await MoodContractInstance.read.isAccessGranted([patientAddress, doctorAddress], { account: address });
+            console.log("Access Granted:", result);
+            return result;
+        } catch (error) {
+            console.error("Error checking access:", error);
+            return false;
+        }
+    }
+    
+    
+     // Funkcija za prikazivanje tabele sa doktorima
+     async function displayDoctors(patientAddress, doctors) {
+        const tableBody = document.querySelector('#doctorTable tbody');
+        tableBody.innerHTML = ''; // Clear previous content
+
+        for (const doctor of doctors) {
+            const row = document.createElement('tr');
+
+            const addressCell = document.createElement('td');
+            addressCell.textContent = doctor.address;
+            row.appendChild(addressCell);
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = doctor.userName;
+            row.appendChild(nameCell);
+
+            const actionCell = document.createElement('td');
+            const button = document.createElement('button');
+
+            // Postavljeno kako bi se ispravno ucitali podaci iz SC (prvi nije povlacio tacne podatke)
+            async function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            await delay(300);
+           
+            // Proveravamo odmah stanje dozvole i ažuriramo dugme
+            const hasAccess = await isAccessGranted(patientAddress, doctor.address);
+            console.log(getAccessList());
+            //console.log("PACIJENT:" + patientAddress + "DOKTOR: " + doctor.address + "DOZVOLA: " + hasAccess);
+            if (hasAccess) {
+                button.classList.add('button-revoke');
+                button.textContent = 'Уклони дозволу';
+            } else {
+                button.classList.add('button-grant');
+                button.textContent = 'Дозволи приступ';
+            }
+
+            button.onclick = async () => {
+                try {
+                    console.log(patientAddress + " " + doctor.address);
+                    if (await isAccessGranted(patientAddress, doctor.address)) {
+                        await revokeAccess(patientAddress, doctor.address, address);
+                        console.log("Access revoked.");
+                    } else {
+                        await grantAccess(patientAddress, doctor.address, address);
+                        console.log("Access granted.");
+                    }
+                    await updateView();
+                } catch (error) {
+                    console.error("Error handling button click:", error);
+                }
+            };
+            actionCell.appendChild(button);
+            row.appendChild(actionCell);
+
+            tableBody.appendChild(row);
+        }
+    }
+
 
 // Funkcija za prikazivanje liste pacijenata
 function displayPatients(pacijenti) {
@@ -81,20 +302,23 @@ function displayPatients(pacijenti) {
     });
 }
 
+
 // Modifikovana funkcija updateView da uključuje prikaz pacijenata
 function updateView(address) {
     console.log("Current address:", address);
 
     // Adrese i imena doktora
     const doktori = [
-        { address: "0x30ec46af58b4613e135d3b38348ca543d8032acc", userName: "др Андреа Милошевић" },
+        { address: "0x30Ec46AF58b4613E135D3B38348cA543d8032aCC", userName: "др Андреа Милошевић" },
         { address: "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e", userName: "др Марко Марковић" },
-        { address: "0x33e8aa8b54897352D3bA98D317CfAB82F6468a73", userName: "др Јелена Ивић" }
+        { address: "0x33e8aa8b54897352D3bA98D317CfAB82F6468a73", userName: "др Јелена Ивић" },
+        { address: "0xa35cC38dB94c606bF3B17302fE0EbC12C3988888", userName: "др Урош Јовановић" }
     ];
     const pacijenti = [
         { address: "0xad7ebe16749d2be378e519adf14166d9c41c908b", userName: "Петар Ракић" },
         { address: "0xfd034b8bfd5da2864ab2e04fba88009971d97c82", userName: "Соња Марић" },
-        { address: "0xbF0aCd829d5F6bca4d5565da16A031cf17A96568", userName: "Иван Стаменковић" }
+        { address: "0x82c45fCc136C5E7Be3e8a2aF02005a90E59E0D05", userName: "Јелена Петровић" },
+        { address: "0xbf0acd829d5f6bca4d5565da16a031cf17a96568", userName: "Иван Стаменковић" }
     ];
 
     document.getElementById("account").innerHTML = address;
@@ -128,85 +352,10 @@ function updateView(address) {
         console.log("Address is recognized as Patient.");
         document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "none");
         document.querySelectorAll(".patient-only").forEach(el => el.style.display = "block");
-        displayDoctors(doktori); // Display the list of doctors for patients
+        displayDoctors(address, doktori); // Display the list of doctors for patients
     } else {
         console.log("Address is not recognized.");
     }
 }
 
-// Pokretanje funkcije nakon što se dokument učita
-document.addEventListener("DOMContentLoaded", async () => {
-    const accounts = await getAccounts();
-    if (accounts.length === 0) {
-        console.error("No accounts found.");
-        return;
-    }
-
-    const [address] = accounts;
-    console.log("Connected account:", address);
-
-    // Pokretanje funkcije za početno učitavanje
-    updateView(address);
-
-    // Osluškivanje promene MetaMask naloga
-    window.ethereum.on('accountsChanged', function (accounts) {
-        if (accounts.length === 0) {
-            console.error("No accounts found.");
-            return;
-        }
-
-        const [newAddress] = accounts;
-        console.log("Connected account:", newAddress);
-
-        // Ažuriraj prikaz na osnovu novog naloga
-        updateView(newAddress);
-    });
-
-    const MoodContractAddress = "0xc1919d32776df14340283891477510ed5aba3a02";
-    const MoodContractABI = [
-        {
-            "inputs": [],
-            "name": "getMood",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "string",
-                    "name": "_mood",
-                    "type": "string"
-                }
-            ],
-            "name": "setMood",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        }
-    ];
-
-    const MoodContractInstance = getContract({
-        address: MoodContractAddress,
-        abi: MoodContractABI,
-        client: walletClient,
-    });
-
-    getMood = async function() {
-        const mood = await MoodContractInstance.read.getMood();
-        document.getElementById("showMood").innerText = `Your Mood: ${mood}`;
-    }
-
-    setMood = async function() {
-        const mood = document.getElementById("mood").value;
-        await MoodContractInstance.write.setMood([mood], {
-            account: address
-        });
-    }
 });

@@ -57,11 +57,11 @@ ul li:hover {
 
 .accountField {
   background-color: rgb(130, 10, 10);
-  padding: 6px 20px; /* Dodaj padding ako je potrebno */
+  padding: 6px 20px; 
   color: white;
   display: flex;
-  align-items: center; /* Poravnava elemente po vertikalnoj osi */
-  gap: 20px; /* Razmak između elemenata */
+  align-items: center; 
+  gap: 20px; 
 }
 
 .accountField .accountPhoto {
@@ -71,7 +71,7 @@ ul li:hover {
 }
 
 .accountField h6 {
-  margin: 0; /* Uklanja margine oko h6 */
+  margin: 0; 
 }
 
 .accountField .userName {
@@ -86,60 +86,74 @@ ul li:hover {
 }
 
 #doctorTable th, #doctorTable td {
-    border: 1px solid #ddd;
+    border: 1px solid #d4d4d4;
     padding: 8px;
     text-align: left;
 }
 
 #doctorTable th {
-    background-color: rgb(208, 20, 20); /* Gray color for header */
-    color: white; /* Text color for header */
+    background-color: rgb(208, 20, 20); 
+    color: white; 
     font-weight: bold;
-    text-align: center; /* Center text in header */
+    text-align: center; 
     height: 50px;
 }
 
 #doctorTable tr:nth-child(even) {
-    background-color: rgb(222, 222, 222); /* Gray color for even rows */
-    color: black; /* Text color for even rows */
+    background-color: rgb(222, 222, 222); 
+    color: black; 
 }
 
 #doctorTable tr:nth-child(odd) {
-    background-color: #ffffff; /* White color for odd rows */
+    background-color: #ffffff; 
 }
 
 #doctorTable td {
-    text-align: left; /* Default text alignment for cells */
+    text-align: left; 
 }
 
 #doctorTable td:last-child {
-    text-align: center; /* Center text in the last column */
+    text-align: center; 
 }
 
 #doctorTable button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-#doctorTable button:hover {
-    background-color: #358a39;
+.button-grant {
+  background-color: rgb(11, 142, 11);
 }
+
+.button-grant:hover {
+  background-color: #165219;
+}
+
+.button-revoke {
+  background-color: red;
+}
+
+.button-revoke:hover {
+  background-color: #a32b2b;
+}
+
+/* Styles for patient table */
 
 #patientList {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centriranje kartica pacijenata */
+  align-items: center; 
   width: 100%;
-  max-width: 1000px; /* Maksimalna širina za bolje izgledanje */
+  max-width: 1000px; 
 }
 
 .patient-card {
@@ -161,5 +175,5 @@ ul li:hover {
 }
 
 .patient-card:hover {
-  background-color: #fec2c2; /* Promeni boju na hover */
+  background-color: #fec2c2; 
 }

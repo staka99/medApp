@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract AccessControl {
+    struct Access {
+        address patient;
+        address doctor;
+    }
+
+    Access[] public accessList;
+
+    function grantAccess(address _patient, address _doctor) public {
+        accessList.push(Access(_patient, _doctor));
+    }
+
+    function getAccessList() public view returns (Access[] memory) {
+        return accessList;
+    }
+
+    function revokeAccess(address _patient, address _doctor) public {
+        for (uint i = 0; i < accessList.length; i++) {
+            if (accessList[i].patient == _patient && accessList[i].doctor == _doctor) {
+                // Swap the element to be removed with the last element
+                accessList[i] = accessList[accessList.length - 1];
+                // Remove the last element
+                accessList.pop();
+                return;
+            }
+        }
+    }
+
+    function isAccessGranted(address _patient, address _doctor) public view returns (bool) {
+        for (uint i = 0; i < accessList.length; i++) {
+            if (accessList[i].patient == _patient && accessList[i].doctor == _doctor) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
