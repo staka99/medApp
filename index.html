@@ -11,46 +11,44 @@
 <body>
     <div class="navbar">
         <div class="logo">
-          <img src="images/logo.png" alt="" width="130"/>
+            <img src="images/logo.png" alt="" width="130"/>
         </div>
         <nav>
-          <ul>
-            <li>Почетна</li>
-            <li class="nav-link doctor-only" style="display: none;">Пацијенти</li>
-            <li class="nav-link patient-only" style="display: none;">Доктори</li>
-            <li>Контакт</li>
-          </ul>
-          <div class="accountField">
-            <div class="accountPhoto">
-                <div id="imgDoktor" class="doctor-only" style="display: none;">
-                    <img src="images/dr.png" alt="" height="60px"/>
+            <ul>
+                <li>Почетна</li>
+                <li class="nav-link doctor-only" style="display: none;">Пацијенти</li>
+                <li class="nav-link patient-only" style="display: none;">Доктори</li>
+                <li>Контакт</li>
+            </ul>
+            <div class="accountField">
+                <div class="accountPhoto">
+                    <div id="imgDoktor" class="doctor-only" style="display: none;">
+                        <img src="images/dr.png" alt="" height="60px"/>
+                    </div>
+                    <div id="imgPacijent" class="patient-only" style="display: none;">
+                        <img src="images/pac.png" alt="" height="60px"/>
+                    </div>
                 </div>
-                <div id="imgPacijent" class="patient-only" style="display: none;">
-                    <img src="images/pac.png" alt="" height="60px""/>
-                </div>
+                <h6> Корисник: 
+                    <div id="userName"></div>
+                    <div id="account"></div>
+                </h6> 
             </div>
-            <h6> Корисник: 
-                <div id="userName"></div>
-                <div id="account"></div>
-            </h6> 
-          </div>
         </nav>
     </div>
 
     <div class="mainPage">
         <div id="divDoktor" class="profile-section doctor-only" style="display: none;">
             <h1>Листа пацијената</h1>
-            <p>Here we can set or get the mood:</p>
-            <label for="mood">Input Mood:</label> <br />
-            <input type="text" id="mood" />
-            <button onclick="getMood()">Get Mood</button>
-            <button onclick="setMood()">Set Mood</button>
-            <p id="showMoodDoktor"></p>
+            <p>Приступите картону имунизације</p>
+            <div id="patientList">
+                <!-- Patient divs will be inserted here by JavaScript -->
+            </div>
         </div>
 
         <div id="divPacijent" class="profile-section patient-only" style="display: none;">
             <h1>Листа доктора</h1>
-            <p>Управљајте приступом Вашем картону имунизације:</p>
+            <p>Управљајте приступом Вашем картону имунизације</p>
             <table id="doctorTable">
                 <thead>
                     <tr>

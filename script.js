@@ -51,7 +51,37 @@ function displayDoctors(doctors) {
     });
 }
 
-// Modifikovana funkcija updateView da uključuje prikaz doktora
+// Funkcija za prikazivanje liste pacijenata
+function displayPatients(pacijenti) {
+    const patientList = document.querySelector('#patientList');
+    patientList.innerHTML = ''; // Clear previous content
+
+    pacijenti.forEach(patient => {
+        const patientDiv = document.createElement('div');
+        patientDiv.className = 'patient-card'; // Apply CSS class
+
+        const img = document.createElement('img');
+        img.src = 'images/pac.png'; // Add patient image
+        img.alt = 'Patient Image';
+        img.height = 60; // Set image height
+        patientDiv.appendChild(img);
+
+        const infoDiv = document.createElement('div');
+
+        const address = document.createElement('p');
+        address.textContent = `Адреса: ${patient.address}`;
+        infoDiv.appendChild(address);
+
+        const name = document.createElement('p');
+        name.textContent = `Име: ${patient.userName}`;
+        infoDiv.appendChild(name);
+
+        patientDiv.appendChild(infoDiv);
+        patientList.appendChild(patientDiv);
+    });
+}
+
+// Modifikovana funkcija updateView da uključuje prikaz pacijenata
 function updateView(address) {
     console.log("Current address:", address);
 
@@ -62,9 +92,9 @@ function updateView(address) {
         { address: "0x33e8aa8b54897352D3bA98D317CfAB82F6468a73", userName: "др Јелена Ивић" }
     ];
     const pacijenti = [
-        { address: "0xad7ebe16749d2be378e519adf14166d9c41c908b", userName: "Пацијент Петар Ракић" },
-        { address: "0xfd034b8bfd5da2864ab2e04fba88009971d97c82", userName: "Пацијент Соња Марић" },
-        { address: "0xbF0aCd829d5F6bca4d5565da16A031cf17A96568", userName: "Пацијент Иван Стаменковић" }
+        { address: "0xad7ebe16749d2be378e519adf14166d9c41c908b", userName: "Петар Ракић" },
+        { address: "0xfd034b8bfd5da2864ab2e04fba88009971d97c82", userName: "Соња Марић" },
+        { address: "0xbF0aCd829d5F6bca4d5565da16A031cf17A96568", userName: "Иван Стаменковић" }
     ];
 
     document.getElementById("account").innerHTML = address;
@@ -93,6 +123,7 @@ function updateView(address) {
         console.log("Address is recognized as Doctor.");
         document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "block");
         document.querySelectorAll(".patient-only").forEach(el => el.style.display = "none");
+        displayPatients(pacijenti); // Display the list of patients for doctors
     } else if (pacijenti.some(pac => pac.address.toLowerCase() === address.toLowerCase())) {
         console.log("Address is recognized as Patient.");
         document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "none");
@@ -102,7 +133,6 @@ function updateView(address) {
         console.log("Address is not recognized.");
     }
 }
-
 
 // Pokretanje funkcije nakon što se dokument učita
 document.addEventListener("DOMContentLoaded", async () => {
