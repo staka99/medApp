@@ -2,39 +2,18 @@
 pragma solidity ^0.8.0;
 
 contract AccessControl {
-    struct Access {
-        address patient;
-        address doctor;
-    }
 
-    Access[] public accessList;
+    mapping(address => mapping(address => bool)) public access;
 
     function grantAccess(address _doctor) public {
-        accessList.push(Access(msg.sender, _doctor));
-    }
-
-    function getAccessList() public view returns (Access[] memory) {
-        return accessList;
+        access[msg.sender][_doctor] = true;
     }
 
     function revokeAccess(address _doctor) public {
-        for (uint i = 0; i < accessList.length; i++) {
-            if (accessList[i].patient == msg.sender && accessList[i].doctor == _doctor) {
-                // Swap the element to be removed with the last element
-                accessList[i] = accessList[accessList.length - 1];
-                // Remove the last element
-                accessList.pop();
-                return;
-            }
-        }
+        access[msg.sender][_doctor] = false;
     }
 
     function isAccessGranted(address _doctor) public view returns (bool) {
-        for (uint i = 0; i < accessList.length; i++) {
-            if (accessList[i].patient == msg.sender && accessList[i].doctor == _doctor) {
-                return true;
-            }
-        }
-        return false;
+        return access[msg.sender][_doctor];
     }
 }

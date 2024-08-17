@@ -51,103 +51,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const MoodContractABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_doctor",
-				"type": "address"
-			}
-		],
-		"name": "grantAccess",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_doctor",
-				"type": "address"
-			}
-		],
-		"name": "revokeAccess",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "accessList",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "patient",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "doctor",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAccessList",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "patient",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "doctor",
-						"type": "address"
-					}
-				],
-				"internalType": "struct AccessControl.Access[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_doctor",
-				"type": "address"
-			}
-		],
-		"name": "isAccessGranted",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
-];
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "grantAccess",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "revokeAccess",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "access",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "isAccessGranted",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
     
-    const MoodContractAddress = "0x6259B8C23C4fbD3244852B52F62E97c3ac3fD587";
+    const MoodContractAddress = "0xdFaC44C3e89a689651b06dB1F83813EACcD3a4a4";
     const MoodContractInstance = getContract({
         address: MoodContractAddress,
         abi: MoodContractABI,
@@ -172,16 +147,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    async function getAccessList() {
-        try {
-            const accessList = await MoodContractInstance.read.getAccessList();
-            console.log("Access List:", accessList);
-            return accessList;
-        } catch (error) {
-            console.error("Error fetching access list:", error);
-            return [];
-        }
-    }
 
     async function isAccessGranted(doctorAddress) {
         try {
@@ -240,7 +205,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     } else {
                         await grantAccess(doctor.address, address);
                         console.log("Access granted.");
-                        console.log(getAccessList());
                     }
                     await updateView();
                 } catch (error) {
