@@ -9,17 +9,17 @@ contract AccessControl {
 
     Access[] public accessList;
 
-    function grantAccess(address _patient, address _doctor) public {
-        accessList.push(Access(_patient, _doctor));
+    function grantAccess(address _doctor) public {
+        accessList.push(Access(msg.sender, _doctor));
     }
 
     function getAccessList() public view returns (Access[] memory) {
         return accessList;
     }
 
-    function revokeAccess(address _patient, address _doctor) public {
+    function revokeAccess(address _doctor) public {
         for (uint i = 0; i < accessList.length; i++) {
-            if (accessList[i].patient == _patient && accessList[i].doctor == _doctor) {
+            if (accessList[i].patient == msg.sender && accessList[i].doctor == _doctor) {
                 // Swap the element to be removed with the last element
                 accessList[i] = accessList[accessList.length - 1];
                 // Remove the last element
@@ -29,9 +29,9 @@ contract AccessControl {
         }
     }
 
-    function isAccessGranted(address _patient, address _doctor) public view returns (bool) {
+    function isAccessGranted(address _doctor) public view returns (bool) {
         for (uint i = 0; i < accessList.length; i++) {
-            if (accessList[i].patient == _patient && accessList[i].doctor == _doctor) {
+            if (accessList[i].patient == msg.sender && accessList[i].doctor == _doctor) {
                 return true;
             }
         }
