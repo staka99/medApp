@@ -51,137 +51,122 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const MoodContractABI = [
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "grantAccess",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "revokeAccess",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "accessList",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "patient",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "doctor",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getAccessList",
-            "outputs": [
-                {
-                    "components": [
-                        {
-                            "internalType": "address",
-                            "name": "patient",
-                            "type": "address"
-                        },
-                        {
-                            "internalType": "address",
-                            "name": "doctor",
-                            "type": "address"
-                        }
-                    ],
-                    "internalType": "struct AccessControl.Access[]",
-                    "name": "",
-                    "type": "tuple[]"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "isAccessGranted",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "grantAccess",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "revokeAccess",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "accessList",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "patient",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "doctor",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAccessList",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "patient",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "doctor",
+						"type": "address"
+					}
+				],
+				"internalType": "struct AccessControl.Access[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "isAccessGranted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
     
-    const MoodContractAddress = "0x057f4aeA6DF2F2BF7A01066a52369a854B8f529a";
+    const MoodContractAddress = "0x6259B8C23C4fbD3244852B52F62E97c3ac3fD587";
     const MoodContractInstance = getContract({
         address: MoodContractAddress,
         abi: MoodContractABI,
         client: walletClient,
     });
 
-    async function grantAccess(patientAddress, doctorAddress, account) {
+    async function grantAccess( doctorAddress, account) {
         try {
-            await MoodContractInstance.write.grantAccess([patientAddress, doctorAddress], { account: address });
-            console.log(`Access granted to doctor: ${doctorAddress} for patient: ${patientAddress}`);
+            await MoodContractInstance.write.grantAccess([ doctorAddress], { account: address });
+            console.log(`Access granted to doctor: ${doctorAddress} for patient: `);
         } catch (error) {
             console.error("Error granting access:", error);
         }
     }
 
-    async function revokeAccess(patientAddress, doctorAddress, account) {
+    async function revokeAccess( doctorAddress, account) {
         try {
-            await MoodContractInstance.write.revokeAccess([patientAddress, doctorAddress], { account: address });
-            console.log(`Access revoked from doctor: ${doctorAddress} for patient: ${patientAddress}`);
+            await MoodContractInstance.write.revokeAccess([ doctorAddress], { account: address });
+            console.log(`Access revoked from doctor: ${doctorAddress} for patient: `);
         } catch (error) {
             console.error("Error revoking access:", error);
         }
@@ -198,11 +183,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    async function isAccessGranted(patientAddress, doctorAddress) {
+    async function isAccessGranted(doctorAddress) {
         try {
-            console.log('Patient Address:', patientAddress);
             console.log('Doctor Address:', doctorAddress);
-            const result = await MoodContractInstance.read.isAccessGranted([patientAddress, doctorAddress], { account: address });
+            const result = await MoodContractInstance.read.isAccessGranted([doctorAddress], { account: address });
             console.log("Access Granted:", result);
             return result;
         } catch (error) {
@@ -238,9 +222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             await delay(300);
            
             // Proveravamo odmah stanje dozvole i ažuriramo dugme
-            const hasAccess = await isAccessGranted(patientAddress, doctor.address);
-            console.log(getAccessList());
-            //console.log("PACIJENT:" + patientAddress + "DOKTOR: " + doctor.address + "DOZVOLA: " + hasAccess);
+            const hasAccess = await isAccessGranted(doctor.address);
             if (hasAccess) {
                 button.classList.add('button-revoke');
                 button.textContent = 'Уклони дозволу';
@@ -252,12 +234,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             button.onclick = async () => {
                 try {
                     console.log(patientAddress + " " + doctor.address);
-                    if (await isAccessGranted(patientAddress, doctor.address)) {
-                        await revokeAccess(patientAddress, doctor.address, address);
+                    if (await isAccessGranted(doctor.address)) {
+                        await revokeAccess(doctor.address, address);
                         console.log("Access revoked.");
                     } else {
-                        await grantAccess(patientAddress, doctor.address, address);
+                        await grantAccess(doctor.address, address);
                         console.log("Access granted.");
+                        console.log(getAccessList());
                     }
                     await updateView();
                 } catch (error) {
