@@ -2,18 +2,26 @@
 pragma solidity ^0.8.0;
 
 contract AccessControl {
+    // Mappiranje pacijenata na doktore koji imaju pristup
+    mapping(address => mapping(address => bool)) public grantedAccesses;
 
-    mapping(address => mapping(address => bool)) public access;
-
+    // Funkcija za dodeljivanje pristupa doktoru
     function grantAccess(address _doctor) public {
-        access[msg.sender][_doctor] = true;
+        grantedAccesses[msg.sender][_doctor] = true;
     }
 
-    function revokeAccess(address _doctor) public {
-        access[msg.sender][_doctor] = false;
-    }
-
+    // Funkcija za proveru da li je pristup dodeljen
     function isAccessGranted(address _doctor) public view returns (bool) {
-        return access[msg.sender][_doctor];
+        return grantedAccesses[msg.sender][_doctor];
+    }
+
+        // Funkcija za proveru da li je pristup dodeljen od strane doktora
+    function hasAccess(address _patient) public view returns (bool) {
+        return grantedAccesses[_patient][msg.sender];
+    }
+
+    // Funkcija za oduzimanje pristupa doktoru
+    function revokeAccess(address _doctor) public {
+        grantedAccesses[msg.sender][_doctor] = false;
     }
 }

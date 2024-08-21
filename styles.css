@@ -157,7 +157,7 @@ ul li:hover {
 }
 
 .patient-card {
-  display: flex;
+  position: relative;
   align-items: center;
   background-color: #e0e0e0; 
   border-radius: 10px; 
@@ -176,4 +176,55 @@ ul li:hover {
 
 .patient-card:hover {
   background-color: #fec2c2; 
+}
+
+.patient-card.expanded {
+  width: 100%;
+  height: auto;
+  background-color: #fec2c2; 
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+}
+
+.patient-card p.access-status {
+  font-weight: bold;
+  color: #333; /* Dodajte boju teksta po želji */
+  margin-top: 10px;
+}
+
+/* Tabela operacija */
+.operation-table {
+  margin: 20px auto;
+  width: 80%;
+  border-collapse: collapse;
+  background-color: #f2f2f2; /* Боја позадине табеле */
+  color: #333; /* Боја текста у табели */
+  border: 1px solid #ccc; /* Боја ивице табеле */
+}
+
+/* Стилизовање заглавља табеле */
+.operation-table th {
+  background-color: rgb(208, 20, 20); /* Боја позадине заглавља */
+  color: white; /* Боја текста у заглављу */
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+/* Стилизовање редова табеле */
+.operation-table td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+/* Стилизовање алтернативних редова */
+.operation-table tr:nth-child(even) {
+  background-color: #e6e6e6;
+}
+
+.no-access {
+  color: rgb(168, 41, 41); /* Боја текста */
+  font-style: italic;      /* Italic стил текста */
 }

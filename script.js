@@ -51,78 +51,97 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const MoodContractABI = [
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "grantAccess",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "revokeAccess",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "access",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "isAccessGranted",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        }
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "grantAccess",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "revokeAccess",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "grantedAccesses",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_patient",
+				"type": "address"
+			}
+		],
+		"name": "hasAccess",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "isAccessGranted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
     ];
     
-    const MoodContractAddress = "0xdFaC44C3e89a689651b06dB1F83813EACcD3a4a4";
+    const MoodContractAddress = "0xDf04B123226b0EFa1729F0a7ab5E6d2460f83DEF";
     const MoodContractInstance = getContract({
         address: MoodContractAddress,
         abi: MoodContractABI,
@@ -147,12 +166,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-
     async function isAccessGranted(doctorAddress) {
         try {
-            console.log('Doctor Address:', doctorAddress);
             const result = await MoodContractInstance.read.isAccessGranted([doctorAddress], { account: address });
-            console.log("Access Granted:", result);
+            return result;
+        } catch (error) {
+            console.error("Error checking access:", error);
+            return false;
+        }
+    }
+
+    async function hasAccess(patientAddress) {
+        try {
+            const result = await MoodContractInstance.read.hasAccess([patientAddress], { account: address });
             return result;
         } catch (error) {
             console.error("Error checking access:", error);
@@ -218,91 +244,186 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // Funkcija za prikazivanje liste pacijenata
+    function displayPatients(pacijenti) {
+        const patientList = document.querySelector('#patientList');
+        patientList.innerHTML = ''; // Očistite prethodni sadržaj
 
-// Funkcija za prikazivanje liste pacijenata
-function displayPatients(pacijenti) {
-    const patientList = document.querySelector('#patientList');
-    patientList.innerHTML = ''; // Clear previous content
+        pacijenti.forEach(patient => {
+            const patientDiv = document.createElement('div');
+            patientDiv.className = 'patient-card'; // Primeni CSS klasu
 
-    pacijenti.forEach(patient => {
-        const patientDiv = document.createElement('div');
-        patientDiv.className = 'patient-card'; // Apply CSS class
+            const img = document.createElement('img');
+            img.src = 'images/pac.png'; // Dodajte sliku pacijenta
+            img.alt = 'Patient Image';
+            img.height = 60; // Postavite visinu slike
+            patientDiv.appendChild(img);
 
-        const img = document.createElement('img');
-        img.src = 'images/pac.png'; // Add patient image
-        img.alt = 'Patient Image';
-        img.height = 60; // Set image height
-        patientDiv.appendChild(img);
+            const infoDiv = document.createElement('div');
 
-        const infoDiv = document.createElement('div');
+            const address = document.createElement('p');
+            address.textContent = `Адреса: ${patient.address}`;
+            infoDiv.appendChild(address);
 
-        const address = document.createElement('p');
-        address.textContent = `Адреса: ${patient.address}`;
-        infoDiv.appendChild(address);
+            const name = document.createElement('p');
+            name.textContent = `Име: ${patient.userName}`;
+            infoDiv.appendChild(name);
 
-        const name = document.createElement('p');
-        name.textContent = `Име: ${patient.userName}`;
-        infoDiv.appendChild(name);
+            patientDiv.appendChild(infoDiv);
 
-        patientDiv.appendChild(infoDiv);
-        patientList.appendChild(patientDiv);
-    });
-}
+            // Dodajte listener za klik na karticu pacijenta
+            patientDiv.addEventListener('click', async () => {
+                console.log(hasAccess(patient.address));
+                const hasAccessDoctor = await hasAccess(patient.address);
+                console.log(hasAccessDoctor);
+                console.log(patient.address)
+                
+                // Proširite div na 100% prilikom klika
+                patientDiv.classList.toggle('expanded');
 
+                async function delay(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+                await delay(300);
+                
+                // Pronađite ili kreirajte element za status pristupa
+                let accessStatus = patientDiv.querySelector('.access-status');
+                if (!accessStatus) {
+                    accessStatus = document.createElement('p');
+                    accessStatus.className = 'access-status';
+                    patientDiv.appendChild(accessStatus);
+                }
 
-// Modifikovana funkcija updateView da uključuje prikaz pacijenata
-function updateView(address) {
-    console.log("Current address:", address);
+                // Prikaz ili skrivanje teksta na osnovu trenutnog stanja
+                if (patientDiv.classList.contains('expanded')) {
+                    if(hasAccessDoctor) {
+                        const table = document.createElement('table');
+                        table.className = 'operation-table';
+                        const headerRow = document.createElement('tr');
+                        
+                        const dateHeader = document.createElement('th');
+                        dateHeader.textContent = 'Датум';
+                        headerRow.appendChild(dateHeader);
+                        
+                        const descriptionHeader = document.createElement('th');
+                        descriptionHeader.textContent = 'Опис операције';
+                        headerRow.appendChild(descriptionHeader);
+                
+                        table.appendChild(headerRow);
+                
+                        patient.operations.forEach(operation => {
+                            const row = document.createElement('tr');
+                
+                            const dateCell = document.createElement('td');
+                            dateCell.textContent = operation.date;
+                            row.appendChild(dateCell);
+                
+                            const descriptionCell = document.createElement('td');
+                            descriptionCell.textContent = operation.description;
+                            row.appendChild(descriptionCell);
+                
+                            table.appendChild(row);
+                        });
+                
+                        accessStatus.appendChild(table);
+                    } else {
+                        accessStatus.textContent = 'Немате дозволу приступа овим подацима.';
+                        accessStatus.classList.add('no-access');
+              
+                    }
+                } else {
+                    accessStatus.innerHTML = '';
+                }
+            });
 
-    // Adrese i imena doktora
-    const doktori = [
-        { address: "0x30Ec46AF58b4613E135D3B38348cA543d8032aCC", userName: "др Андреа Милошевић" },
-        { address: "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e", userName: "др Марко Марковић" },
-        { address: "0x33e8aa8b54897352D3bA98D317CfAB82F6468a73", userName: "др Јелена Ивић" },
-        { address: "0xa35cC38dB94c606bF3B17302fE0EbC12C3988888", userName: "др Урош Јовановић" }
-    ];
-    const pacijenti = [
-        { address: "0xad7ebe16749d2be378e519adf14166d9c41c908b", userName: "Петар Ракић" },
-        { address: "0xfd034b8bfd5da2864ab2e04fba88009971d97c82", userName: "Соња Марић" },
-        { address: "0x82c45fCc136C5E7Be3e8a2aF02005a90E59E0D05", userName: "Јелена Петровић" },
-        { address: "0xbf0acd829d5f6bca4d5565da16a031cf17a96568", userName: "Иван Стаменковић" }
-    ];
-
-    document.getElementById("account").innerHTML = address;
-
-    // Pronalaženje korisničkog imena na osnovu adrese
-    const userName = doktori.find(doc => doc.address.toLowerCase() === address.toLowerCase())
-                      || pacijenti.find(pac => pac.address.toLowerCase() === address.toLowerCase())
-                      || { userName: "Unknown User" };
-    document.getElementById("userName").innerHTML = userName.userName;
-
-    console.log("Doctors list:", doktori);
-    console.log("Patients list:", pacijenti);
-
-    // Sakrij sve sekcije
-    document.querySelectorAll(".profile-section").forEach(section => {
-        section.style.display = "none";
-    });
-    
-    // Sakrij sve nav linkove
-    document.querySelectorAll(".nav-link").forEach(link => {
-        link.style.display = "none";
-    });
-
-    // Prikazivanje sekcija na osnovu naloga
-    if (doktori.some(doc => doc.address.toLowerCase() === address.toLowerCase())) {
-        console.log("Address is recognized as Doctor.");
-        document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "block");
-        document.querySelectorAll(".patient-only").forEach(el => el.style.display = "none");
-        displayPatients(pacijenti); // Display the list of patients for doctors
-    } else if (pacijenti.some(pac => pac.address.toLowerCase() === address.toLowerCase())) {
-        console.log("Address is recognized as Patient.");
-        document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "none");
-        document.querySelectorAll(".patient-only").forEach(el => el.style.display = "block");
-        displayDoctors(address, doktori); // Display the list of doctors for patients
-    } else {
-        console.log("Address is not recognized.");
+            patientList.appendChild(patientDiv);
+        });
     }
-}
 
-});
+
+    // Modifikovana funkcija updateView da uključuje prikaz pacijenata
+    function updateView(address) {
+        console.log("Current address:", address);
+
+        // Adrese i imena doktora
+        const doktori = [
+            { address: "0x30Ec46AF58b4613E135D3B38348cA543d8032aCC", userName: "др Андреа Милошевић" },
+            { address: "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e", userName: "др Марко Марковић" },
+            { address: "0x33e8aa8b54897352D3bA98D317CfAB82F6468a73", userName: "др Јелена Ивић" },
+            { address: "0xa35cC38dB94c606bF3B17302fE0EbC12C3988888", userName: "др Урош Јовановић" }
+        ];
+
+        const pacijenti = [
+            {
+                address: "0xad7ebe16749d2be378e519adf14166d9c41c908b",
+                userName: "Петар Ракић",
+                operations: [
+                    { date: "15.07.2023.", description: "Апендиксектомија" },
+                    { date: "20.02.2024.", description: "Операција колена" },
+                    { date: "25.07.2024.", description: "Eстетска корекација носа" }
+                ]
+            },
+            {
+                address: "0xfd034b8bfd5da2864ab2e04fba88009971d97c82",
+                userName: "Соња Марић",
+                operations: [
+                    { date: "10.11.2022.", description: "Хируршка интервенција на срцу" },
+                    { date: "06.09.2023.", description: "Операција катаракте" }
+                ]
+            },
+            {
+                address: "0x82c45fCc136C5E7Be3e8a2aF02005a90E59E0D05",
+                userName: "Јелена Петровић",
+                operations: [
+                    { date: "18.03.2021.", description: "Операција жучне кесе" },
+                    { date: "25.12.2023.", description: "Пластична операција носа" }
+                ]
+            },
+            {
+                address: "0xbf0acd829d5f6bca4d5565da16a031cf17a96568",
+                userName: "Иван Стаменковић",
+                operations: [
+                    { date: "10.01.2023.", description: "Ласерска корекција вида" },
+                    { date: "04.01.2024.", description: "Операција кичме" }
+                ]
+            }
+        ];
+
+        document.getElementById("account").innerHTML = address;
+
+        // Pronalaženje korisničkog imena na osnovu adrese
+        const userName = doktori.find(doc => doc.address.toLowerCase() === address.toLowerCase())
+                        || pacijenti.find(pac => pac.address.toLowerCase() === address.toLowerCase())
+                        || { userName: "Unknown User" };
+        document.getElementById("userName").innerHTML = userName.userName;
+
+        console.log("Doctors list:", doktori);
+        console.log("Patients list:", pacijenti);
+
+        // Sakrij sve sekcije
+        document.querySelectorAll(".profile-section").forEach(section => {
+            section.style.display = "none";
+        });
+        
+        // Sakrij sve nav linkove
+        document.querySelectorAll(".nav-link").forEach(link => {
+            link.style.display = "none";
+        });
+
+        // Prikazivanje sekcija na osnovu naloga
+        if (doktori.some(doc => doc.address.toLowerCase() === address.toLowerCase())) {
+            console.log("Address is recognized as Doctor.");
+            document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "block");
+            document.querySelectorAll(".patient-only").forEach(el => el.style.display = "none");
+            displayPatients(pacijenti); // Display the list of patients for doctors
+        } else if (pacijenti.some(pac => pac.address.toLowerCase() === address.toLowerCase())) {
+            console.log("Address is recognized as Patient.");
+            document.querySelectorAll(".doctor-only").forEach(el => el.style.display = "none");
+            document.querySelectorAll(".patient-only").forEach(el => el.style.display = "block");
+            displayDoctors(address, doktori); // Display the list of doctors for patients
+        } else {
+            console.log("Address is not recognized.");
+        }
+    }
+
+    });
