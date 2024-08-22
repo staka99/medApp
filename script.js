@@ -81,6 +81,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             "inputs": [
                 {
                     "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "grantAccessToAnotherPerson",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
                     "name": "_doctor",
                     "type": "address"
                 }
@@ -197,7 +215,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     ];
     
-    const MoodContractAddress = "0xC30928e3CF439c3A9eac910B82B99cAd3968B5F4";
+    const MoodContractAddress = "0x6C4aa37bF71c49d4dd3a43a32332bDD7700b76C6";
     const MoodContractInstance = getContract({
         address: MoodContractAddress,
         abi: MoodContractABI,
@@ -259,9 +277,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             return false;
         }
     }
+
+    async function grantAccessToAnotherPerson(patientAddress, doctorAddress) {
+        try {
+            await MoodContractInstance.write.grantAccessToAnotherPerson([patientAddress, doctorAddress], { account: address });
+            console.log(`Access granted to doctor: ${doctorAddress} for patient: `);
+        } catch (error) {
+            console.error("Error granting access:", error);
+        }
+    }
     
-     // Funkcija za prikazivanje tabele sa doktorima
-     async function displayDoctors(patientAddress, doctors) {
+    // Funkcija za prikaz doktora
+    async function displayDoctors(patientAddress, doctors) {
         const tableBody = document.querySelector('#doctorTable tbody');
         tableBody.innerHTML = ''; // Clear previous content
 
@@ -319,7 +346,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             button2.textContent = 'Дозвола за другу особу';
             button2.onclick = () => {
                 try {
-                    openAccessModal();
+                    openAccessModal(doctor.address);
                 } catch (error) {
                     console.error('Грешка са покретањем процедуре:', error);
                 }
@@ -333,7 +360,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Функција за дијалог
-    function openAccessModal() {
+    function openAccessModal(doctorAddress) {
         const modal = document.getElementById('accessModal');
         const closeButton = document.querySelector('.close-button');
         const grantAccessButton  = document.getElementById('modalButton');
@@ -358,7 +385,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                         messageElement.textContent = 'Приступ успешно одобрен!';
                         messageElement.classList.remove('error');
                         messageElement.classList.add('success');
-                        messageElement.style.display = 'block';
+                        messageElement.style.display = 'block'; 
+                        console.log(address);
+                        console.log(doctorAddress);
+                        await grantAccessToAnotherPerson(address, doctorAddress);
                     } else {
                         messageElement.textContent = 'Није унесена исправна адреса или немате овлашћење за ову особу.';
                         messageElement.classList.remove('success');
@@ -383,8 +413,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Функција за давање овлашћења
      document.getElementById('addAccessButton').addEventListener('click', async () => {
-         const personalAddress = document.getElementById('metaMaskAddress').value.trim();
+         const personalAddress = document.getElementById('addressAccessCard').value.trim();
          const account = await getAccounts();
+         console.log(personalAddress);
 
          if (personalAddress && account.length > 0) {
             await allowPermission(personalAddress);

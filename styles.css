@@ -334,17 +334,17 @@ input[type="text"] {
   margin-top: 10px;
   padding: 10px;
   border-radius: 4px;
-  display: none; /* Skriveno dok se ne prikaže */
+  display: none; 
 }
 
 .message.error {
-  color: #d9534f; /* Crvena boja za greške */
-  background-color: #f2dede; /* Svetlo crvena pozadina */
-  border: 1px solid #ebccd1; /* Rub sa svetlo crvenom bojom */
+  color: #d9534f; 
+  background-color: #f2dede; 
+  border: 1px solid #ebccd1; 
 }
 
 .message.success {
-  color: #3c763d; /* Zelenkasta boja za uspeh */
-  background-color: #dff0d8; /* Svetlo zelena pozadina */
-  border: 1px solid #d6e9c6; /* Rub sa svetlo zelenom bojom */
+  color: #3c763d; 
+  background-color: #dff0d8;
+  border: 1px solid #d6e9c6; 
 }
