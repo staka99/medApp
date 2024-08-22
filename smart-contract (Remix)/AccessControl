@@ -4,39 +4,63 @@ pragma solidity ^0.8.0;
 contract AccessControl {
 
     // ------------------------ OVLAŠĆENJE DOKTORU ------------------------
-    // Mappiranje pacijenata na doktore koji imaju pristup
     mapping(address => mapping(address => bool)) public grantedAccesses;
 
-    // Funkcija za dodeljivanje pristupa doktoru
     function grantAccess(address _doctor) public {
         grantedAccesses[msg.sender][_doctor] = true;
     }
 
-    // Funkcija za proveru da li je pristup dodeljen
     function isAccessGranted(address _doctor) public view returns (bool) {
         return grantedAccesses[msg.sender][_doctor];
     }
 
-    // Funkcija za proveru da li je pristup dodeljen od strane doktora
     function hasAccess(address _patient) public view returns (bool) {
         return grantedAccesses[_patient][msg.sender];
     }
 
-    // Funkcija za oduzimanje pristupa doktoru
     function revokeAccess(address _doctor) public {
         grantedAccesses[msg.sender][_doctor] = false;
     }
 
     // ------------------------ OVLAŠĆENJE DRUGOJ OSOBI ------------------------
-    // Mappiranje pacijenata na pacijente koji imaju ovlašćenje
     mapping(address => mapping(address => bool)) public allowedPermission;
 
-    function allowPermission(address _person) public {
-        allowedPermission[msg.sender][_person] = true;
+    function allowPermission(address _person1) public {
+        allowedPermission[msg.sender][_person1] = true;
     }
 
-    function hasPermission(address _person) public view returns (bool) {
-        return allowedPermission[_person][msg.sender];
+    function hasPermission(address _person2) public view returns (bool) {
+        return allowedPermission[_person2][msg.sender];
+    }
+
+
+    // ------------------------ PRISTUP U IME DRUGE OSOBE ------------------------
+       function grantAccessToAnotherPerson(address _patient, address _doctor) public {
+        grantedAccesses[_patient][_doctor] = true;
+    }
+
+
+    // ------------------------ HITAN SLUČAJ ------------------------
+    mapping(address => mapping(address => bool)) public hasTriggeredEmergency;
+
+    mapping(address => uint256) public emergencyCallCounts;
+
+    function triggerEmergency(address _patient) public {
+        hasTriggeredEmergency[_patient][msg.sender] = true;
+        emergencyCallCounts[_patient] += 1;
+    }
+
+    function revokeEmergencyCall(address _patient) public {
+        hasTriggeredEmergency[_patient][msg.sender] = false;
+        emergencyCallCounts[_patient] -= 1;
+    }
+
+    function isEmergencyActivated(address _patient) public view returns (bool) {
+        return emergencyCallCounts[_patient] >= 3;
+    }
+
+    function hasDoctorTriggeredEmergency(address _patient) public view returns (bool) {
+        return hasTriggeredEmergency[_patient][msg.sender];
     }
 
 }
