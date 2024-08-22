@@ -112,6 +112,32 @@ document.addEventListener("DOMContentLoaded", async () => {
             "inputs": [
                 {
                     "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                }
+            ],
+            "name": "revokeEmergencyCall",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                }
+            ],
+            "name": "triggerEmergency",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
                     "name": "",
                     "type": "address"
                 },
@@ -127,6 +153,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "internalType": "bool",
                     "name": "",
                     "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "emergencyCallCounts",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
                 }
             ],
             "stateMutability": "view",
@@ -179,11 +224,54 @@ document.addEventListener("DOMContentLoaded", async () => {
             "inputs": [
                 {
                     "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                }
+            ],
+            "name": "hasDoctorTriggeredEmergency",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
                     "name": "_person2",
                     "type": "address"
                 }
             ],
             "name": "hasPermission",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "hasTriggeredEmergency",
             "outputs": [
                 {
                     "internalType": "bool",
@@ -212,16 +300,49 @@ document.addEventListener("DOMContentLoaded", async () => {
             ],
             "stateMutability": "view",
             "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                }
+            ],
+            "name": "isEmergencyActivated",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "REQUIRED_DOCTORS",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
         }
     ];
     
-    const MoodContractAddress = "0x6C4aa37bF71c49d4dd3a43a32332bDD7700b76C6";
+    const MoodContractAddress = "0x05F7c234838f12A6d6F7782a2bf060Cb5752a266";
     const MoodContractInstance = getContract({
         address: MoodContractAddress,
         abi: MoodContractABI,
         client: walletClient,
     });
 
+    // Aктивности пацијената из ПУ
     async function grantAccess( doctorAddress, account) {
         try {
             await MoodContractInstance.write.grantAccess([ doctorAddress], { account: address });
@@ -286,8 +407,46 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error granting access:", error);
         }
     }
+
+    // Aктивности Доктора из ПУ
+    async function triggerEmergency( patientAddress, account) {
+        try {
+            await MoodContractInstance.write.triggerEmergency([patientAddress], { account: address });
+        } catch (error) {
+            console.error("Грешка:", error);
+        }
+    }
+
+    async function revokeEmergencyCall( patientAddress, account) {
+        try {
+            await MoodContractInstance.write.revokeEmergencyCall([patientAddress], { account: address });
+        } catch (error) {
+            console.error("Error revoking access:", error);
+        }
+    }
+
+    async function isEmergencyActivated(patientAddress, account) {
+        try {
+            const result = await MoodContractInstance.read.isEmergencyActivated([patientAddress], { account: address });
+            return result;
+        } catch (error) {
+            console.error("Error checking access:", error);
+            return false;
+        }
+    }
+
+    async function hasDoctorTriggeredEmergency(patientAddress, account) {
+        try {
+            const result = await MoodContractInstance.read.hasDoctorTriggeredEmergency([patientAddress], { account: address });
+            return result;
+        } catch (error) {
+            console.error("Error checking access:", error);
+            return false;
+        }
+    }
+
     
-    // Funkcija za prikaz doktora
+    // Приказ доктора
     async function displayDoctors(patientAddress, doctors) {
         const tableBody = document.querySelector('#doctorTable tbody');
         tableBody.innerHTML = ''; // Clear previous content
@@ -425,7 +584,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
     
-
+    // Приказ
     function displayPatients(pacijenti) {
         const patientList = document.querySelector('#patientList');
         patientList.innerHTML = ''; 
@@ -477,7 +636,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 // Prikaz ili skrivanje teksta na osnovu trenutnog stanja
                 if (patientDiv.classList.contains('expanded')) {
-                    if(hasAccessDoctor) {
+                    const isEmergency = await isEmergencyActivated(patient.address);
+                    if(hasAccessDoctor || isEmergency) {
                         const table = document.createElement('table');
                         table.className = 'operation-table';
                         const headerRow = document.createElement('tr');
@@ -507,10 +667,49 @@ document.addEventListener("DOMContentLoaded", async () => {
                         });
                 
                         accessStatus.appendChild(table);
+
+                        const emergencyButton = document.createElement('button');
+                        emergencyButton.className = 'emergency-button'; 
+                        if (await hasDoctorTriggeredEmergency(patient.address)) {
+                            emergencyButton.textContent = 'Откажите хитан случај';
+                        } else {
+                            emergencyButton.textContent = 'Хитан случај';
+                        }
+                    
+                        // Dodajte dugme u accessStatus div
+                        accessStatus.appendChild(emergencyButton);
+                    
+                        // Opcionalno: Dodajte event listener za klik na dugme
+                        emergencyButton.addEventListener('click', () => {
+                            if (hasDoctorTriggeredEmergency(patient.address)) {
+                                revokeEmergencyCall(patient.address);
+                            } else {
+                                triggerEmergency(patient.address);
+                            }
+                        });
                     } else {
                         accessStatus.textContent = 'Немате дозволу приступа овим подацима.';
                         accessStatus.classList.add('no-access');
-              
+
+                        const emergencyButton = document.createElement('button');
+                        emergencyButton.className = 'emergency-button'; 
+                        if (await hasDoctorTriggeredEmergency(patient.address)) {
+                            emergencyButton.textContent = 'Откажите хитан случај';
+                        } else {
+                            emergencyButton.textContent = 'Хитан случај';
+                        }
+                    
+                        // Dodajte dugme u accessStatus div
+                        accessStatus.appendChild(emergencyButton);
+                    
+                        // Opcionalno: Dodajte event listener za klik na dugme
+                        emergencyButton.addEventListener('click', () => {
+                            if (hasDoctorTriggeredEmergency(patient.address)) {
+                                triggerEmergency(patient.address);
+                            } else {
+                                revokeEmergencyCall(patient.address);
+                            }
+                        });
                     }
                 } else {
                     accessStatus.innerHTML = '';

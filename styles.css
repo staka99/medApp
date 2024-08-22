@@ -47,8 +47,9 @@ ul li:hover {
 
 .mainPage {
   width: 50%;
-  height: 1000px;
+  height: auto;
   margin: 0 auto;
+  padding-bottom: 100px;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -225,9 +226,30 @@ ul li:hover {
 }
 
 .no-access {
-  color: rgb(168, 41, 41); /* Боја текста */
-  font-style: italic;      /* Italic стил текста */
+  font-weight: bold;
+  color: darkred; /* Tamno crvena boja za tekst */
+  font-style: italic;
+  display: block; /* Obezbeđuje da tekst zauzima ceo red */
+  margin-bottom: 10px; /* Razmak između teksta i dugmeta */
+  text-align: center; /* Centriranje teksta i dugmeta unutar elementa */
 }
+
+.emergency-button {
+  background-color: rgb(208, 20, 20);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  display: block; /* Obezbeđuje da dugme bude na novom redu */
+  margin: 10px auto; /* Automatski centriranje dugmeta */
+}
+
+.emergency-button:hover {
+  background-color: darkred;
+}
+
 
 /* Kartica za Metamask unos */
 .access-card {
