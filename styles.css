@@ -262,6 +262,89 @@ ul li:hover {
   font-size: 16px;
 }
 
-.access-card button:hover {
+/* Дугме за другу особу */ 
+.button-procedure {
+  background-color: #007bff;
+}
+
+.button-procedure:hover {
   background-color: #0056b3;
+}
+
+/* Дијалог прозор*/
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Садржај */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Input and button styles */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+.modalButton {
+  background-color: rgb(11, 142, 11); /* Green */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.modalButton:hover {
+  background-color: #165219;
+}
+
+.message {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  display: none; /* Skriveno dok se ne prikaže */
+}
+
+.message.error {
+  color: #d9534f; /* Crvena boja za greške */
+  background-color: #f2dede; /* Svetlo crvena pozadina */
+  border: 1px solid #ebccd1; /* Rub sa svetlo crvenom bojom */
+}
+
+.message.success {
+  color: #3c763d; /* Zelenkasta boja za uspeh */
+  background-color: #dff0d8; /* Svetlo zelena pozadina */
+  border: 1px solid #d6e9c6; /* Rub sa svetlo zelenom bojom */
 }

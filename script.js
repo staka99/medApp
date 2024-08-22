@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             "inputs": [
                 {
                     "internalType": "address",
-                    "name": "_person",
+                    "name": "_person1",
                     "type": "address"
                 }
             ],
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             "inputs": [
                 {
                     "internalType": "address",
-                    "name": "_person",
+                    "name": "_person2",
                     "type": "address"
                 }
             ],
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     ];
     
-    const MoodContractAddress = "0x74bB1E4378ec015613375F0FDEcFee21Bd6eAB3B";
+    const MoodContractAddress = "0xC30928e3CF439c3A9eac910B82B99cAd3968B5F4";
     const MoodContractInstance = getContract({
         address: MoodContractAddress,
         abi: MoodContractABI,
@@ -242,11 +242,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     
-    async function allowPermission( personalAddress, account) {
+    async function allowPermission(personalAddress, account) {
         try {
             await MoodContractInstance.write.allowPermission([personalAddress], { account: address });
         } catch (error) {
             console.error("Грешка:", error);
+        }
+    }
+
+    async function hasPermission(personalAddress, account) {
+        try {
+            const result = await MoodContractInstance.read.hasPermission([personalAddress], { account: address });
+            return result;
+        } catch (error) {
+            console.error("Error checking access:", error);
+            return false;
         }
     }
     
@@ -303,9 +313,87 @@ document.addEventListener("DOMContentLoaded", async () => {
             actionCell.appendChild(button);
             row.appendChild(actionCell);
 
+            // друго дугме
+            const button2 = document.createElement('button');
+            button2.classList.add('button-procedure');
+            button2.textContent = 'Дозвола за другу особу';
+            button2.onclick = () => {
+                try {
+                    openAccessModal();
+                } catch (error) {
+                    console.error('Грешка са покретањем процедуре:', error);
+                }
+            };
+            actionCell.appendChild(button2);
+            row.appendChild(actionCell);
+    
+
             tableBody.appendChild(row);
         }
     }
+
+    // Функција за дијалог
+    function openAccessModal() {
+        const modal = document.getElementById('accessModal');
+        const closeButton = document.querySelector('.close-button');
+        const grantAccessButton  = document.getElementById('modalButton');
+        const messageElement = document.getElementById('message'); // Element za poruku
+        const metaMaskAddressInput = document.getElementById('metaMaskAddress');
+
+        modal.style.display = 'block';
+        metaMaskAddressInput.value = '';
+        messageElement.style.display = 'none';
+
+        closeButton.onclick = () => {
+            modal.style.display = 'none';
+            messageElement.style.display = 'none';
+        };
+
+        grantAccessButton .onclick = async () => {
+            const address = metaMaskAddressInput.value;
+            if (address) {
+                try {
+                    messageElement.textContent = ''; 
+                    if(await hasPermission(address)){
+                        messageElement.textContent = 'Приступ успешно одобрен!';
+                        messageElement.classList.remove('error');
+                        messageElement.classList.add('success');
+                        messageElement.style.display = 'block';
+                    } else {
+                        messageElement.textContent = 'Није унесена исправна адреса или немате овлашћење за ову особу.';
+                        messageElement.classList.remove('success');
+                        messageElement.classList.add('error');
+                        messageElement.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Грешка:', error);
+                    messageElement.textContent = 'Дошло је до грешке. Пожалите се администратору.';
+                    messageElement.classList.remove('success');
+                    messageElement.classList.add('error');
+                    messageElement.style.display = 'block';
+                }
+            } else {
+                messageElement.textContent = 'Молимо вас да унесете адресу.';
+                messageElement.classList.remove('success');
+                messageElement.classList.add('error');
+                messageElement.style.display = 'block';
+            }
+        };
+    }
+
+    // Функција за давање овлашћења
+     document.getElementById('addAccessButton').addEventListener('click', async () => {
+         const personalAddress = document.getElementById('metaMaskAddress').value.trim();
+         const account = await getAccounts();
+
+         if (personalAddress && account.length > 0) {
+            await allowPermission(personalAddress);
+               console.log(`Дато је овлашћење особи са адресом: ${personalAddress}`);
+        } else {
+            console.error("Нисте унели адресу или не сте повезани са MetaMask.");
+        }
+    });
+    
 
     function displayPatients(pacijenti) {
         const patientList = document.querySelector('#patientList');
@@ -401,19 +489,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             patientList.appendChild(patientDiv);
         });
     }
-
-    // Funkcija za dodavanje pristupa
-    document.getElementById('addAccessButton').addEventListener('click', async () => {
-        const personalAddress = document.getElementById('metaMaskAddress').value.trim();
-        const account = await getAccounts();
-
-        if (personalAddress && account.length > 0) {
-            await allowPermission(personalAddress, account[0]);
-            console.log(`Дато је овлашћење особи са адресом: ${personalAddress}`);
-        } else {
-            console.error("Нисте унели адресу или не сте повезани са MetaMask.");
-        }
-    });
 
     function updateView(address) {
         console.log("Current address:", address);

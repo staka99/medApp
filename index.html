@@ -16,7 +16,7 @@
         <nav>
             <ul>
                 <li>Почетна</li>
-                <li class="nav-link doctor-only" style="display: none;">Картони имунизације</li>
+                <li class="nav-link doctor-only" style="display: none;">Медицински подаци</li>
                 <li class="nav-link patient-only" style="display: none;">Заштита приватности</li>
                 <li>Контакт</li>
             </ul>
@@ -48,7 +48,7 @@
 
         <div id="divPacijent" class="profile-section patient-only" style="display: none;">
             <h1>Листа доктора</h1>
-            <p>Управљајте приступом Вашем картону имунизације</p>
+            <p>Управљајте приступом Вашем картону операција</p>
             <table id="doctorTable">
                 <thead>
                     <tr>
@@ -60,6 +60,15 @@
                 <tbody>
                     <!-- Row data will be inserted here by JavaScript -->
                 </tbody>
+                <div id="accessModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Дозволи приступ подацима за другу особу</h2>
+                        <input type="text" id="metaMaskAddress" placeholder="Унесите MetaMask адреса">
+                        <button id="modalButton" class="modalButton">Дозволи приступ</button>
+                        <div id="message" class="message"></div> 
+                    </div>
+                </div>
             </table>
 
                 <!-- New Section for Adding Access -->
