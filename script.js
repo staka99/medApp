@@ -539,8 +539,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const address = metaMaskAddressInput.value;
             if (address) {
                 try {
+                    const permission = await hasPermission(address);
                     messageElement.textContent = ''; 
-                    if(await hasPermission(address)){
+                    if(permission){
                         messageElement.textContent = 'Приступ успешно одобрен!';
                         messageElement.classList.remove('error');
                         messageElement.classList.add('success');
