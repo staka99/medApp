@@ -51,97 +51,153 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const MoodContractABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_doctor",
-				"type": "address"
-			}
-		],
-		"name": "grantAccess",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_doctor",
-				"type": "address"
-			}
-		],
-		"name": "revokeAccess",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "grantedAccesses",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_patient",
-				"type": "address"
-			}
-		],
-		"name": "hasAccess",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_doctor",
-				"type": "address"
-			}
-		],
-		"name": "isAccessGranted",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_person",
+                    "type": "address"
+                }
+            ],
+            "name": "allowPermission",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "grantAccess",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "revokeAccess",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "allowedPermission",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "grantedAccesses",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_patient",
+                    "type": "address"
+                }
+            ],
+            "name": "hasAccess",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_person",
+                    "type": "address"
+                }
+            ],
+            "name": "hasPermission",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_doctor",
+                    "type": "address"
+                }
+            ],
+            "name": "isAccessGranted",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
     ];
     
-    const MoodContractAddress = "0xDf04B123226b0EFa1729F0a7ab5E6d2460f83DEF";
+    const MoodContractAddress = "0x74bB1E4378ec015613375F0FDEcFee21Bd6eAB3B";
     const MoodContractInstance = getContract({
         address: MoodContractAddress,
         abi: MoodContractABI,
@@ -186,6 +242,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     
+    async function allowPermission( personalAddress, account) {
+        try {
+            await MoodContractInstance.write.allowPermission([personalAddress], { account: address });
+        } catch (error) {
+            console.error("Грешка:", error);
+        }
+    }
     
      // Funkcija za prikazivanje tabele sa doktorima
      async function displayDoctors(patientAddress, doctors) {
@@ -244,19 +307,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Funkcija za prikazivanje liste pacijenata
     function displayPatients(pacijenti) {
         const patientList = document.querySelector('#patientList');
-        patientList.innerHTML = ''; // Očistite prethodni sadržaj
+        patientList.innerHTML = ''; 
 
         pacijenti.forEach(patient => {
             const patientDiv = document.createElement('div');
-            patientDiv.className = 'patient-card'; // Primeni CSS klasu
+            patientDiv.className = 'patient-card'; 
 
             const img = document.createElement('img');
-            img.src = 'images/pac.png'; // Dodajte sliku pacijenta
+            img.src = 'images/pac.png'; 
             img.alt = 'Patient Image';
-            img.height = 60; // Postavite visinu slike
+            img.height = 60; 
             patientDiv.appendChild(img);
 
             const infoDiv = document.createElement('div');
@@ -340,12 +402,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // Funkcija za dodavanje pristupa
+    document.getElementById('addAccessButton').addEventListener('click', async () => {
+        const personalAddress = document.getElementById('metaMaskAddress').value.trim();
+        const account = await getAccounts();
 
-    // Modifikovana funkcija updateView da uključuje prikaz pacijenata
+        if (personalAddress && account.length > 0) {
+            await allowPermission(personalAddress, account[0]);
+            console.log(`Дато је овлашћење особи са адресом: ${personalAddress}`);
+        } else {
+            console.error("Нисте унели адресу или не сте повезани са MetaMask.");
+        }
+    });
+
     function updateView(address) {
         console.log("Current address:", address);
 
-        // Adrese i imena doktora
         const doktori = [
             { address: "0x30Ec46AF58b4613E135D3B38348cA543d8032aCC", userName: "др Андреа Милошевић" },
             { address: "0x0cd08bcf4c3c6a261f8f993938d2dd897f71267e", userName: "др Марко Марковић" },

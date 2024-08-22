@@ -228,3 +228,40 @@ ul li:hover {
   color: rgb(168, 41, 41); /* Боја текста */
   font-style: italic;      /* Italic стил текста */
 }
+
+/* Kartica za Metamask unos */
+.access-card {
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 50px auto;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.access-card h2 {
+  margin-bottom: 15px;
+}
+
+.access-card input[type="text"] {
+  width: calc(100% - 22px); /* Adjust width considering padding and border */
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.access-card button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.access-card button:hover {
+  background-color: #0056b3;
+}
