@@ -51,291 +51,291 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const MoodContractABI = [
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_person1",
-                    "type": "address"
-                }
-            ],
-            "name": "allowPermission",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "grantAccess",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "grantAccessToAnotherPerson",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "revokeAccess",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                }
-            ],
-            "name": "revokeEmergencyCall",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                }
-            ],
-            "name": "triggerEmergency",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "allowedPermission",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "emergencyCallCounts",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "grantedAccesses",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                }
-            ],
-            "name": "hasAccess",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                }
-            ],
-            "name": "hasDoctorTriggeredEmergency",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_person2",
-                    "type": "address"
-                }
-            ],
-            "name": "hasPermission",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "hasTriggeredEmergency",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_doctor",
-                    "type": "address"
-                }
-            ],
-            "name": "isAccessGranted",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_patient",
-                    "type": "address"
-                }
-            ],
-            "name": "isEmergencyActivated",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "REQUIRED_DOCTORS",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_person1",
+				"type": "address"
+			}
+		],
+		"name": "aprovePerson",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "grandAccessForDoctor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_patient",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "grantAccessToAnotherPerson",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "recoveAccessForDoctor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_patient",
+				"type": "address"
+			}
+		],
+		"name": "revokeEmergencyCall",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_patient",
+				"type": "address"
+			}
+		],
+		"name": "triggerEmergency",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "approvedPersons",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "doctorAccess",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "emergencyCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "emergencyThreshold",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_patient",
+				"type": "address"
+			}
+		],
+		"name": "hasDoctorTriggeredEmergency",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "hasTriggeredEmergency",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_patient",
+				"type": "address"
+			}
+		],
+		"name": "haveAccessToPatient",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_doctor",
+				"type": "address"
+			}
+		],
+		"name": "isAccessForDoctorGranted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_person2",
+				"type": "address"
+			}
+		],
+		"name": "isApprovedForPerson",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_patient",
+				"type": "address"
+			}
+		],
+		"name": "isEmergencyActivated",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
     
-    const MoodContractAddress = "0x05F7c234838f12A6d6F7782a2bf060Cb5752a266";
+    const MoodContractAddress = "0xEa562c14edd459fBC3867266e68381B411bc3097";
     const MoodContractInstance = getContract({
         address: MoodContractAddress,
         abi: MoodContractABI,
@@ -343,27 +343,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Aктивности пацијената из ПУ
-    async function grantAccess( doctorAddress, account) {
+    async function grandAccessForDoctor( doctorAddress, account) {
         try {
-            await MoodContractInstance.write.grantAccess([ doctorAddress], { account: address });
+            await MoodContractInstance.write.grandAccessForDoctor([ doctorAddress], { account: address });
             console.log(`Access granted to doctor: ${doctorAddress} for patient: `);
         } catch (error) {
             console.error("Error granting access:", error);
         }
     }
 
-    async function revokeAccess( doctorAddress, account) {
+    async function recoveAccessForDoctor( doctorAddress, account) {
         try {
-            await MoodContractInstance.write.revokeAccess([ doctorAddress], { account: address });
+            await MoodContractInstance.write.recoveAccessForDoctor([ doctorAddress], { account: address });
             console.log(`Access revoked from doctor: ${doctorAddress} for patient: `);
         } catch (error) {
             console.error("Error revoking access:", error);
         }
     }
 
-    async function isAccessGranted(doctorAddress) {
+    async function isAccessForDoctorGranted(doctorAddress) {
         try {
-            const result = await MoodContractInstance.read.isAccessGranted([doctorAddress], { account: address });
+            const result = await MoodContractInstance.read.isAccessForDoctorGranted([doctorAddress], { account: address });
             return result;
         } catch (error) {
             console.error("Error checking access:", error);
@@ -371,9 +371,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    async function hasAccess(patientAddress) {
+    async function haveAccessToPatient(patientAddress) {
         try {
-            const result = await MoodContractInstance.read.hasAccess([patientAddress], { account: address });
+            const result = await MoodContractInstance.read.haveAccessToPatient([patientAddress], { account: address });
             return result;
         } catch (error) {
             console.error("Error checking access:", error);
@@ -381,17 +381,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     
-    async function allowPermission(personalAddress, account) {
+    async function aprovePerson(personalAddress, account) {
         try {
-            await MoodContractInstance.write.allowPermission([personalAddress], { account: address });
+            await MoodContractInstance.write.aprovePerson([personalAddress], { account: address });
         } catch (error) {
             console.error("Грешка:", error);
         }
     }
 
-    async function hasPermission(personalAddress, account) {
+    async function isApprovedForPerson(personalAddress, account) {
         try {
-            const result = await MoodContractInstance.read.hasPermission([personalAddress], { account: address });
+            const result = await MoodContractInstance.read.isApprovedForPerson([personalAddress], { account: address });
             return result;
         } catch (error) {
             console.error("Error checking access:", error);
@@ -408,7 +408,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Aктивности Доктора из ПУ
+    // Aктивности лекара из ПУ
     async function triggerEmergency( patientAddress, account) {
         try {
             await MoodContractInstance.write.triggerEmergency([patientAddress], { account: address });
@@ -446,7 +446,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     
-    // Приказ доктора
+    // Приказ лекара
     async function displayDoctors(patientAddress, doctors) {
         const tableBody = document.querySelector('#doctorTable tbody');
         tableBody.innerHTML = ''; // Clear previous content
@@ -472,7 +472,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             await delay(300);
            
             // Proveravamo odmah stanje dozvole i ažuriramo dugme
-            const hasAccess = await isAccessGranted(doctor.address);
+            const hasAccess = await isAccessForDoctorGranted(doctor.address);
             if (hasAccess) {
                 button.classList.add('button-revoke');
                 button.textContent = 'Уклони дозволу';
@@ -484,11 +484,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             button.onclick = async () => {
                 try {
                     console.log(patientAddress + " " + doctor.address);
-                    if (await isAccessGranted(doctor.address)) {
-                        await revokeAccess(doctor.address, address);
+                    if (await isAccessForDoctorGranted(doctor.address)) {
+                        await recoveAccessForDoctor(doctor.address, address);
                         console.log("Access revoked.");
                     } else {
-                        await grantAccess(doctor.address, address);
+                        await grandAccessForDoctor(doctor.address, address);
                         console.log("Access granted.");
                     }
                     await updateView();
@@ -539,7 +539,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const address = metaMaskAddressInput.value;
             if (address) {
                 try {
-                    const permission = await hasPermission(address);
+                    const permission = await isApprovedForPerson(address);
                     messageElement.textContent = ''; 
                     if(permission){
                         messageElement.textContent = 'Приступ успешно одобрен!';
@@ -578,7 +578,7 @@ document.addEventListener("DOMContentLoaded", async () => {
          console.log(personalAddress);
 
          if (personalAddress && account.length > 0) {
-            await allowPermission(personalAddress);
+            await aprovePerson(personalAddress);
                console.log(`Дато је овлашћење особи са адресом: ${personalAddress}`);
         } else {
             console.error("Нисте унели адресу или не сте повезани са MetaMask.");
@@ -614,8 +614,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Dodajte listener za klik na karticu pacijenta
             patientDiv.addEventListener('click', async () => {
-                console.log(hasAccess(patient.address));
-                const hasAccessDoctor = await hasAccess(patient.address);
+                const hasAccessDoctor = await haveAccessToPatient(patient.address);
                 console.log(hasAccessDoctor);
                 console.log(patient.address)
                 
@@ -627,6 +626,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
                 await delay(300);
                 
+                // novo
+                //triggerEmergency(patient.address);
+
                 // Pronađite ili kreirajte element za status pristupa
                 let accessStatus = patientDiv.querySelector('.access-status');
                 if (!accessStatus) {
@@ -669,6 +671,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                         accessStatus.appendChild(table);
 
+                        
+                    if(isEmergency) {
                         const emergencyButton = document.createElement('button');
                         emergencyButton.className = 'emergency-button'; 
                         if (await hasDoctorTriggeredEmergency(patient.address)) {
@@ -688,6 +692,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 triggerEmergency(patient.address);
                             }
                         });
+                        }
                     } else {
                         accessStatus.textContent = 'Немате дозволу приступа овим подацима.';
                         accessStatus.classList.add('no-access');

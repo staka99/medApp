@@ -2,61 +2,83 @@
 pragma solidity ^0.8.0;
 
 contract AccessControl {
+    
+    mapping(address => mapping(address => bool)) public doctorAccess;
+
+    mapping(address => mapping(address => bool)) public approvedPersons;
+
+    mapping(address => mapping(address => bool)) public hasTriggeredEmergency;
+
+    mapping(address => uint256) public emergencyCount;
+
+    uint256 public emergencyThreshold = 3; 
 
     // ------------------------ OVLAŠĆENJE DOKTORU ------------------------
-    mapping(address => mapping(address => bool)) public grantedAccesses;
 
-    function grantAccess(address _doctor) public {
-        grantedAccesses[msg.sender][_doctor] = true;
+    function grandAccessForDoctor(address _doctor) public {
+        doctorAccess[msg.sender][_doctor] = true;
     }
 
-    function isAccessGranted(address _doctor) public view returns (bool) {
-        return grantedAccesses[msg.sender][_doctor];
+    function isAccessForDoctorGranted(address _doctor) public view returns (bool) {
+        return doctorAccess[msg.sender][_doctor];
     }
 
-    function hasAccess(address _patient) public view returns (bool) {
-        return grantedAccesses[_patient][msg.sender];
+    function haveAccessToPatient(address _patient) public view returns (bool) {
+        return doctorAccess[_patient][msg.sender];
     }
 
-    function revokeAccess(address _doctor) public {
-        grantedAccesses[msg.sender][_doctor] = false;
+    function recoveAccessForDoctor(address _doctor) public {
+        doctorAccess[msg.sender][_doctor] = false;
     }
 
     // ------------------------ OVLAŠĆENJE DRUGOJ OSOBI ------------------------
-    mapping(address => mapping(address => bool)) public allowedPermission;
 
-    function allowPermission(address _person1) public {
-        allowedPermission[msg.sender][_person1] = true;
+    function aprovePerson(address _person1) public {
+        approvedPersons[msg.sender][_person1] = true;
     }
 
-    function hasPermission(address _person2) public view returns (bool) {
-        return allowedPermission[_person2][msg.sender];
+    function isApprovedForPerson(address _person2) public view returns (bool) {
+        return approvedPersons[_person2][msg.sender];
     }
 
 
     // ------------------------ PRISTUP U IME DRUGE OSOBE ------------------------
-       function grantAccessToAnotherPerson(address _patient, address _doctor) public {
-        grantedAccesses[_patient][_doctor] = true;
+
+    function grantAccessToAnotherPerson(address _patient, address _doctor) public {
+        require(approvedPersons[_patient][msg.sender], "You are not authorized to grant access for this patient.");
+            doctorAccess[_patient][_doctor] = true;
     }
 
 
     // ------------------------ HITAN SLUČAJ ------------------------
-    mapping(address => mapping(address => bool)) public hasTriggeredEmergency;
-
-    mapping(address => uint256) public emergencyCallCounts;
 
     function triggerEmergency(address _patient) public {
-        hasTriggeredEmergency[_patient][msg.sender] = true;
-        emergencyCallCounts[_patient] += 1;
+        if(hasDoctorTriggeredEmergency(_patient)) {
+            if (isEmergencyActivated(_patient)) {
+                doctorAccess[msg.sender][_patient] = true; 
+            }
+        } else {
+            if (emergencyCount[_patient] > 0) {
+                emergencyCount[_patient] += 1;
+            } else {
+                hasTriggeredEmergency[_patient][msg.sender] = true;
+                emergencyCount[_patient] = 1;
+            }
+        }
     }
 
     function revokeEmergencyCall(address _patient) public {
-        hasTriggeredEmergency[_patient][msg.sender] = false;
-        emergencyCallCounts[_patient] -= 1;
+        if (hasDoctorTriggeredEmergency(_patient)) {
+            hasTriggeredEmergency[_patient][msg.sender] = false;
+            emergencyCount[_patient] = 0;
+        } else {
+            require(emergencyCount[_patient] > 0, "No emergency calls to revoke.");
+            emergencyCount[_patient] -= 1;
+        }
     }
 
     function isEmergencyActivated(address _patient) public view returns (bool) {
-        return emergencyCallCounts[_patient] >= 3;
+        return emergencyCount[_patient] >= emergencyThreshold;
     }
 
     function hasDoctorTriggeredEmergency(address _patient) public view returns (bool) {
